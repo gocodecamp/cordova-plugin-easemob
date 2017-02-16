@@ -85,9 +85,9 @@
                 </intent-filter>
             </receiver>
             <activity android:name=".activity.ChatActivity" android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.NoActionBar" />
+                android:theme="@style/horizontal_slide" />
             <activity android:name=".activity.ContextMenuActivity"
-                android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+                android:screenOrientation="portrait" android:theme="@style/MyDialogStyle" />
             <activity android:name=".activity.ImageGridActivity" android:launchMode="singleTask"
                 android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
             <activity android:name=".activity.RecorderVideoActivity" android:launchMode="singleTask"
