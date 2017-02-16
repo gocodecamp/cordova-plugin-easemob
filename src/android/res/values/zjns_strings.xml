@@ -1,0 +1,3 @@
+<resources>
+    <string name="str_no_support">app版本过低无法阅读此消息</string>
+</resources>

@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-easemob"
+    version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    <name>ZJNSHXPlugin</name>
+    <js-module name="ZJNSHXPlugin" src="www/ZJNSHXPlugin.js">
+        <clobbers target="ZJNSHXPlugin" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="ZJNSHXPlugin">
+                <param name="android-package" value="com.bjzjns.hxplugin.ZJNSHXPlugin" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+            <uses-feature android:name="android.hardware.camera" />
+            <uses-feature android:name="android.hardware.camera.autofocus" />
+
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+            <uses-feature android:name="android.hardware.camera2" />
+            //地图包、搜索包需要的基础权限
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            //定位包、导航包需要的额外权限（注：基础权限也需要）
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+            <!-- 环信权限 -->
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        </config-file>
+        <source-file src="src/android/ZJNSHXPlugin.java" target-dir="src/com/bjzjns/hxplugin" />
+        <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
+        <resource-file src="src/android/easeui-release.aar" target="libs/easeui-release.aar" />
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="com.amap.api.v2.apikey"
+                android:value="ef7922869b2ca29c376b6c3c986d3731" />
+            <!-- 设置环信应用的AppKey -->
+            <meta-data android:name="EASEMOB_APPKEY" android:value="bjzjnssinacom#styleme" />
+
+            <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+            <service android:name="com.amap.api.location.APSService" />
+            <!-- 环信声明SDK所需的service SDK核心功能 -->
+            <service android:name="com.hyphenate.chat.EMChatService" android:exported="true" />
+            <!-- 环信声明SDK所需的receiver -->
+            <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                    <data android:scheme="package" />
+                </intent-filter>
+                <!-- 可选filter -->
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.USER_PRESENT" />
+                </intent-filter>
+            </receiver>
+            <service android:name="com.xiaomi.mipush.sdk.PushMessageHandler" android:enabled="true"
+                android:exported="true" />
+            <service android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+                android:enabled="true" />
+
+            <receiver android:name="com.hyphenate.chat.EMMipushReceiver" android:exported="true">
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.ERROR" />
+                </intent-filter>
+            </receiver>
+            <activity android:name=".activity.ChatActivity" android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
+            <activity android:name=".activity.ContextMenuActivity"
+                android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+            <activity android:name=".activity.ImageGridActivity" android:launchMode="singleTask"
+                android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+            <activity android:name=".activity.RecorderVideoActivity" android:launchMode="singleTask"
+                android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+            <!-- 地图 -->
+            <activity android:name="com.hyphenate.easeui.ui.EaseMapActivity"
+                android:screenOrientation="portrait" />
+            <!-- 显示下载大图页面 -->
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
+                android:screenOrientation="portrait" />
+            <!-- 下载文件 -->
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
+                android:screenOrientation="portrait" />
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateAlwaysHidden" />
+        </config-file>
+        <source-file src="src/android/activity/ChatActivity.java"
+            target-dir="src/com/bjzjns/hxplugin/activity" />
+        <source-file src="src/android/activity/ContextMenuActivity.java"
+            target-dir="src/com/bjzjns/hxplugin/activity" />
+        <source-file src="src/android/activity/ImageGridActivity.java"
+            target-dir="src/com/bjzjns/hxplugin/activity" />
+        <source-file src="src/android/activity/RecorderVideoActivity.java"
+            target-dir="src/com/bjzjns/hxplugin/activity" />
+        <source-file src="src/android/fragment/ChatFragment.java"
+            target-dir="src/com/bjzjns/hxplugin/fragment" />
+        <source-file src="src/android/fragment/ImageGridFragment.java"
+            target-dir="src/com/bjzjns/hxplugin/fragment" />
+        <source-file src="src/android/im/HXContext.java" target-dir="src/com/bjzjns/hxplugin/im" />
+        <source-file src="src/android/im/HXPreferenceManager.java"
+            target-dir="src/com/bjzjns/hxplugin/im" />
+        <source-file src="src/android/manager/HXManager.java"
+            target-dir="src/com/bjzjns/hxplugin/manager" />
+        <source-file src="src/android/model/BaseModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/model/ConversationItemModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/model/ConversationListModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/model/HXUserModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/model/ObjectModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/model/VideoEntityModel.java"
+            target-dir="src/com/bjzjns/hxplugin/model" />
+        <source-file src="src/android/permissions/Permissions.java"
+            target-dir="src/com/bjzjns/hxplugin/permissions" />
+        <source-file src="src/android/permissions/PermissionsManager.java"
+            target-dir="src/com/bjzjns/hxplugin/permissions" />
+        <source-file src="src/android/permissions/PermissionsResultAction.java"
+            target-dir="src/com/bjzjns/hxplugin/permissions" />
+        <source-file src="src/android/tools/GsonUtils.java"
+            target-dir="src/com/bjzjns/hxplugin/tools" />
+        <source-file src="src/android/tools/LogUtils.java"
+            target-dir="src/com/bjzjns/hxplugin/tools" />
+        <source-file src="src/android/tools/PackageUtils.java"
+            target-dir="src/com/bjzjns/hxplugin/tools" />
+        <source-file src="src/android/tools/ToastUtils.java"
+            target-dir="src/com/bjzjns/hxplugin/tools" />
+        <source-file src="src/android/tools/video/ImageCache.java"
+            target-dir="src/com/bjzjns/hxplugin/tools/video" />
+        <source-file src="src/android/tools/video/ImageResizer.java"
+            target-dir="src/com/bjzjns/hxplugin/tools/video" />
+        <source-file src="src/android/tools/video/ImageWorker.java"
+            target-dir="src/com/bjzjns/hxplugin/tools/video" />
+        <source-file src="src/android/tools/video/RecyclingBitmapDrawable.java"
+            target-dir="src/com/bjzjns/hxplugin/tools/video" />
+        <source-file src="src/android/tools/video/Utils.java"
+            target-dir="src/com/bjzjns/hxplugin/tools/video" />
+        <source-file src="src/android/view/RecyclingImageView.java"
+            target-dir="src/com/bjzjns/hxplugin/view" />
+        <source-file src="src/android/res/values/zjns_strings.xml" target-dir="res/values" />
+        <source-file src="src/android/res/layout/em_choose_griditem.xml" target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_context_menu_for_image.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_context_menu_for_location.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_context_menu_for_text.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_context_menu_for_video.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_context_menu_for_voice.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_image_grid_fragment.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_recorder_activity.xml" target-dir="res/layout" />
+        <source-file src="src/android/res/layout/im_activity_chat.xml" target-dir="res/layout" />
+        <source-file src="src/android/res/drawable/em_actionbar_camera_icon.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_camera_switch_normal.9.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_camera_switch_pressed.9.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_camera_switch_selector.xml"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_chat_video_call_selector.xml"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_chat_video_normal.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_chat_video_pressed.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_chat_video_selector.xml"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_context_menu_item_bg.xml"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_empty_photo.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_photogrid_list_selector.xml"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_video_recorder_start_btn.png"
+            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/em_video_recorder_stop_btn.png"
+            target-dir="res/drawable" />
+    </platform>
+</plugin>
