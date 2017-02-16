@@ -184,8 +184,6 @@
             target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_camera_switch_selector.xml"
             target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_chat_video_call_selector.xml"
-            target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_chat_video_normal.png"
             target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_chat_video_pressed.png"
