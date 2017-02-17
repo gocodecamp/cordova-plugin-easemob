@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.bjzjns.hxplugin.R;
 import com.bjzjns.hxplugin.activity.ContextMenuActivity;
 import com.bjzjns.hxplugin.activity.ImageGridActivity;
 import com.bjzjns.hxplugin.tools.GsonUtils;
@@ -27,7 +26,6 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
-import com.hyphenate.easeui.model.MessageUser;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.easeui.ui.EaseChatFragment.EaseChatFragmentHelper;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
@@ -100,7 +98,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         //use the menu in base class
         super.registerExtendMenuItem();
         //extend menu items
-        inputMenu.registerExtendMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(getResources().getIdentifier("attach_video", "string", getActivity().getPackageName()), getResources().getIdentifier("em_chat_video_selector", "drawable", getActivity().getPackageName()), ITEM_VIDEO, extendMenuItemClickListener);
 //        inputMenu.registerExtendMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, ITEM_FILE, extendMenuItemClickListener);
     }
 

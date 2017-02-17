@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.bjzjns.hxplugin.R;
 import com.bjzjns.hxplugin.fragment.ChatFragment;
 import com.bjzjns.hxplugin.permissions.PermissionsManager;
 import com.hyphenate.easeui.EaseConstant;
@@ -27,7 +26,7 @@ public class ChatActivity extends EaseBaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setContentView(R.layout.im_activity_chat);
+        setContentView(getResources().getIdentifier("im_activity_chat", "layout", getPackageName()));
         activityInstance = this;
         toChatUserId = "-1";
 
@@ -39,7 +38,7 @@ public class ChatActivity extends EaseBaseActivity {
         chatFragment = new ChatFragment();
         //传入参数
         chatFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(getResources().getIdentifier("container", "id", getPackageName()), chatFragment).commit();
 
     }
 

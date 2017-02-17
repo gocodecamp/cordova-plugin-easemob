@@ -12,50 +12,51 @@
             </feature>
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-            <uses-permission android:name="android.permission.INTERNET" />
-            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-            <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-            <uses-permission android:name="android.permission.RECORD_AUDIO" />
-            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-            <uses-feature android:name="android.hardware.camera" />
-            <uses-feature android:name="android.hardware.camera.autofocus" />
-
-            <uses-permission android:name="android.permission.CAMERA" />
-            <uses-permission android:name="android.permission.FLASHLIGHT" />
-
-            <uses-feature android:name="android.hardware.camera2" />
-            //地图包、搜索包需要的基础权限
-            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-            //定位包、导航包需要的额外权限（注：基础权限也需要）
-            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-            <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-            <!-- 环信权限 -->
             <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.GET_TASKS" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
             <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
             <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+            <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+            <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+            <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+            <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
         </config-file>
         <source-file src="src/android/ZJNSHXPlugin.java" target-dir="src/com/bjzjns/hxplugin" />
         <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
         <resource-file src="src/android/easeui-release.aar" target="libs/easeui-release.aar" />
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
-            <meta-data android:name="com.amap.api.v2.apikey"
-                android:value="ef7922869b2ca29c376b6c3c986d3731" />
-            <!-- 设置环信应用的AppKey -->
-            <meta-data android:name="EASEMOB_APPKEY" android:value="bjzjnssinacom#styleme" />
+            <!-- 设置环信应用的appkey -->
+            <meta-data
+                android:name="EASEMOB_APPKEY"
+                android:value="easemob-demo#chatdemoui" />
+            <meta-data
+                android:name="com.baidu.lbsapi.API_KEY"
+                android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+            <!-- 声明sdk所需的service -->
+            <service
+                android:name="com.hyphenate.chat.EMChatService"
+                android:exported="true" />
 
-            <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-            <service android:name="com.amap.api.location.APSService" />
-            <!-- 环信声明SDK所需的service SDK核心功能 -->
-            <service android:name="com.hyphenate.chat.EMChatService" android:exported="true" />
-            <!-- 环信声明SDK所需的receiver -->
+            <service
+                android:name="com.hyphenate.chat.EMJobService"
+                android:exported="true"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+
+            <!-- 声明sdk所需的receiver -->
             <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
                 <intent-filter>
                     <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -68,41 +69,49 @@
                     <action android:name="android.intent.action.USER_PRESENT" />
                 </intent-filter>
             </receiver>
-            <service android:name="com.xiaomi.mipush.sdk.PushMessageHandler" android:enabled="true"
-                android:exported="true" />
-            <service android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-                android:enabled="true" />
 
-            <receiver android:name="com.hyphenate.chat.EMMipushReceiver" android:exported="true">
-                <intent-filter>
-                    <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-                </intent-filter>
-                <intent-filter>
-                    <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-                </intent-filter>
-                <intent-filter>
-                    <action android:name="com.xiaomi.mipush.ERROR" />
-                </intent-filter>
-            </receiver>
-            <activity android:name=".activity.ChatActivity" android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide" />
-            <activity android:name=".activity.ContextMenuActivity"
-                android:screenOrientation="portrait" android:theme="@style/MyDialogStyle" />
-            <activity android:name=".activity.ImageGridActivity" android:launchMode="singleTask"
-                android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-            <activity android:name=".activity.RecorderVideoActivity" android:launchMode="singleTask"
-                android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
-            <!-- 地图 -->
-            <activity android:name="com.hyphenate.easeui.ui.EaseMapActivity"
-                android:screenOrientation="portrait" />
-            <!-- 显示下载大图页面 -->
-            <activity android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
-                android:screenOrientation="portrait" />
-            <!-- 下载文件 -->
-            <activity android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
-                android:screenOrientation="portrait" />
-            <activity android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+            <!-- 百度地图所需的service -->
+            <service
+                android:name="com.baidu.location.f"
+                android:enabled="true"
+                android:process=":remote" />
+
+            <activity
+                android:name=".activity.ChatActivity"
                 android:screenOrientation="portrait"
+                android:theme="@style/horizontal_slide" />
+            <activity
+                android:name=".activity.ContextMenuActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/MyDialogStyle" />
+            <activity
+                android:name=".activity.ImageGridActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize" />
+            <activity
+                android:name=".activity.RecorderVideoActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize" />
+            <activity
+                android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/horizontal_slide" />
+            <!-- 显示下载大图页面 -->
+            <activity
+                android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/horizontal_slide" />
+            <!-- 下载文件 -->
+            <activity
+                android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/horizontal_slide" />
+            <activity
+                android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
         </config-file>
         <source-file src="src/android/activity/ChatActivity.java"
@@ -160,7 +169,6 @@
             target-dir="src/com/bjzjns/hxplugin/tools/video" />
         <source-file src="src/android/view/RecyclingImageView.java"
             target-dir="src/com/bjzjns/hxplugin/view" />
-        <source-file src="src/android/res/values/zjns_strings.xml" target-dir="res/values" />
         <source-file src="src/android/res/layout/em_choose_griditem.xml" target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_context_menu_for_image.xml"
             target-dir="res/layout" />

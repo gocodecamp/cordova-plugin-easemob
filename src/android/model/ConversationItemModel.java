@@ -3,7 +3,6 @@ package com.bjzjns.hxplugin.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
 

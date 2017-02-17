@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.bjzjns.hxplugin.R;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseBaseActivity;
@@ -35,20 +34,20 @@ public class ContextMenuActivity extends EaseBaseActivity {
         int type = message.getType().ordinal();
         if (type == EMMessage.Type.TXT.ordinal()) {
             if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)) {
-                setContentView(R.layout.em_context_menu_for_image);
+                setContentView(getResources().getIdentifier("em_context_menu_for_image", "layout", getPackageName()));
             } else {
-                setContentView(R.layout.em_context_menu_for_text);
+                setContentView(getResources().getIdentifier("em_context_menu_for_text", "layout", getPackageName()));
             }
         } else if (type == EMMessage.Type.LOCATION.ordinal()) {
-            setContentView(R.layout.em_context_menu_for_location);
+            setContentView(getResources().getIdentifier("em_context_menu_for_location", "layout", getPackageName()));
         } else if (type == EMMessage.Type.IMAGE.ordinal()) {
-            setContentView(R.layout.em_context_menu_for_image);
+            setContentView(getResources().getIdentifier("em_context_menu_for_image", "layout", getPackageName()));
         } else if (type == EMMessage.Type.VOICE.ordinal()) {
-            setContentView(R.layout.em_context_menu_for_voice);
+            setContentView(getResources().getIdentifier("em_context_menu_for_voice", "layout", getPackageName()));
         } else if (type == EMMessage.Type.VIDEO.ordinal()) {
-            setContentView(R.layout.em_context_menu_for_video);
+            setContentView(getResources().getIdentifier("em_context_menu_for_video", "layout", getPackageName()));
         } else if (type == EMMessage.Type.FILE.ordinal()) {
-            setContentView(R.layout.em_context_menu_for_location);
+            setContentView(getResources().getIdentifier("em_context_menu_for_location", "layout", getPackageName()));
         }
     }
 
