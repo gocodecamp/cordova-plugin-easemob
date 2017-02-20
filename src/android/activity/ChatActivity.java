@@ -32,7 +32,9 @@ public class ChatActivity extends EaseBaseActivity {
 
         //聊天人或群id
         extModel = getIntent().getExtras().getParcelable(EaseConstant.EXTRA_EXT_MODEL);
-        toChatUserId = extModel.touser.easemobile_id;
+        if (null != extModel && null != extModel.touser) {
+            toChatUserId = extModel.touser.easemobile_id;
+        }
 
         //可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
@@ -51,13 +53,22 @@ public class ChatActivity extends EaseBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         // 点击notification bar进入聊天页面，保证只有一个聊天页面
-        String userId = intent.getStringExtra(EaseConstant.EXTRA_USER_ID);
+        String userId = "";
+        extModel = getIntent().getExtras().getParcelable(EaseConstant.EXTRA_EXT_MODEL);
+        if (null != extModel && null != extModel.touser) {
+            userId = extModel.touser.easemobile_id;
+        }
         if (toChatUserId.equals(userId)) {
             super.onNewIntent(intent);
         } else {
             finish();
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override

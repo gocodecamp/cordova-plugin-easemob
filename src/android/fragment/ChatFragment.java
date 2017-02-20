@@ -178,9 +178,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
             }.getType();
             model = GsonUtils.fromJson(extContent, type);
         }
-        model.user = extModel.user;
-        model.touser = extModel.touser;
-        model.message_scene = extModel.message_scene;
+        if (null != extModel) {
+            model.user = extModel.user;
+            model.touser = extModel.touser;
+            model.message_scene = extModel.message_scene;
+        }
         message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, GsonUtils.toJson(model));
     }
 

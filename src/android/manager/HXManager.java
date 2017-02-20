@@ -289,6 +289,7 @@ public class HXManager {
                 extModel.user.username = getUserId();
                 extModel.user.head_thumb = getUserAvatar();
             }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, extModel);
             intent.putExtra(EaseConstant.EXTRA_HXMETADATA, hxMetaData);
             intent.putExtra(EaseConstant.EXTRA_CURRENTUSERID, getUserHXId());
@@ -716,6 +717,7 @@ public class HXManager {
         }
 
         Intent intent = new Intent(context, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, model);
         intent.putExtra(EaseConstant.EXTRA_HXMETADATA, hxMetaData);
         intent.putExtra(EaseConstant.EXTRA_CURRENTUSERID, currentUserId);

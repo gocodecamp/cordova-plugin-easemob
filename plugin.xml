@@ -2,8 +2,8 @@
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-easemob"
     version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>ZJNSHXPlugin</name>
-    <js-module name="ZJNSHXPlugin" src="www/ZJNSHXPlugin.js">
-        <clobbers target="ZJNSHXPlugin" />
+    <js-module name="EasemobPlugin" src="www/ZJNSHXPlugin.js">
+        <clobbers target="EasemobPlugin" />
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
@@ -77,23 +77,25 @@
                 android:process=":remote" />
 
             <activity
-                android:name=".activity.ChatActivity"
+                android:name="com.bjzjns.hxplugin.activity.ChatActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide" />
+                android:launchMode="singleTask"
+                android:theme="@style/horizontal_slide"
+                android:windowSoftInputMode="adjustResize"/>
             <activity
-                android:name=".activity.ContextMenuActivity"
+                android:name="com.bjzjns.hxplugin.activity.ContextMenuActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/MyDialogStyle" />
             <activity
-                android:name=".activity.ImageGridActivity"
-                android:launchMode="singleTask"
+                android:name="com.bjzjns.hxplugin.activity.ImageGridActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize" />
+                android:theme="@style/horizontal_slide"
+                android:windowSoftInputMode="stateAlwaysHidden" />
             <activity
-                android:name=".activity.RecorderVideoActivity"
-                android:launchMode="singleTask"
+                android:name="com.bjzjns.hxplugin.activity.RecorderVideoActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize" />
+                android:theme="@style/horizontal_slide"
+                android:windowSoftInputMode="stateAlwaysHidden" />
             <activity
                 android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
                 android:screenOrientation="portrait"

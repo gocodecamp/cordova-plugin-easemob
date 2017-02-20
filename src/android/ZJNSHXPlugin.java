@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class ZJNSHXPlugin extends CordovaPlugin {
     // 初始化环信
-    private static final String INIT_HX = "initEaseMobile ";
+    private static final String INIT_HX = "initEaseMobile";
     // 登录环信
     private static final String LOGIN_HX = "login";
     // 退出环信
@@ -51,10 +51,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        LogUtils.d("ZJNSHXPlugin", "action =" + action + "args =" + args.toString());
+        LogUtils.d("ZJNSHXPlugin", "action =" + action + ",args =" + args.toString());
         if (action.equals(INIT_HX)) {
             initHX();
-            callbackContext.success();
+            callbackContext.success("initEaseMobile success");
             return true;
         } else if (action.equals(LOGIN_HX)) {
             loginHX(args.getString(0), args.getString(1), callbackContext);
@@ -86,6 +86,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * 初始化环信
      */
     private void initHX() {
+        LogUtils.d("ZJNSHXPlugin", "initHX");
         HXManager.getInstance().init(this.cordova.getActivity().getApplicationContext());
     }
 
@@ -95,6 +96,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param sendVal
      */
     private void gotoChat(String sendVal) {
+        LogUtils.d("ZJNSHXPlugin", "gotoChat");
         HXManager.getInstance().startChatActivity(getContext(), sendVal);
     }
 
@@ -105,10 +107,11 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param password
      */
     private void loginHX(String userName, String password, final CallbackContext callbackContext) {
+        LogUtils.d("ZJNSHXPlugin", "loginHX");
         HXManager.getInstance().loginHX(userName, password, new EMCallBack() {
             @Override
             public void onSuccess() {
-                callbackContext.success();
+                callbackContext.success("login success");
                 cordova.getThreadPool().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -120,7 +123,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int i, String s) {
-                callbackContext.error(i + ":" + s);
+                callbackContext.error("login error:" + i + ":" + s);
             }
 
             @Override
@@ -136,11 +139,12 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void logout(boolean unbindDeviceToken, final CallbackContext callbackContext) {
+        LogUtils.d("ZJNSHXPlugin", "logout");
         HXManager.getInstance().logout(unbindDeviceToken, new EMCallBack() {
 
             @Override
             public void onSuccess() {
-                callbackContext.success();
+                callbackContext.success("logout success");
             }
 
             @Override
@@ -149,7 +153,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int code, String error) {
-                callbackContext.error(code + ":" + error);
+                callbackContext.error("logout error:" + code + ":" + error);
             }
         });
     }
@@ -160,6 +164,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void loadAllConversation(final CallbackContext callbackContext) {
+        LogUtils.d("ZJNSHXPlugin", "loadAllConversation");
         this.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -203,12 +208,13 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void delConversationItem(String sendVal, CallbackContext callbackContext) {
+        LogUtils.d("ZJNSHXPlugin", "delConversationItem");
         ConversationItemModel conversation = GsonUtils.fromJson(sendVal, ConversationItemModel.class);
         if (null != conversation) {
             try {
                 // 删除此会话
                 HXManager.getInstance().delConversation(conversation.conversationId);
-                callbackContext.success();
+                callbackContext.success("delConversationItem success");
             } catch (Exception e) {
                 e.printStackTrace();
                 callbackContext.error("del conversationitem fail");
