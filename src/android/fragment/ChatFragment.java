@@ -19,12 +19,11 @@ import android.widget.BaseAdapter;
 import com.bjzjns.hxplugin.activity.ContextMenuActivity;
 import com.bjzjns.hxplugin.activity.ImageGridActivity;
 import com.bjzjns.hxplugin.tools.GsonUtils;
-import com.google.gson.reflect.TypeToken;
+import com.bjzjns.hxplugin.view.chatrow.EaseChatRowProduct;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
-import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.easeui.ui.EaseChatFragment.EaseChatFragmentHelper;
@@ -34,7 +33,6 @@ import com.hyphenate.util.PathUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper {
@@ -42,7 +40,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     // constant start from 11 to avoid conflict with constant in base class
     private static final int ITEM_VIDEO = 11;
     private static final int ITEM_FILE = 12;
-
+    private static final int MESSAGE_TYPE_SENT_PRODUCT = 1;
+    private static final int MESSAGE_TYPE_RECV_PRODUCT = 2;
     private static final int REQUEST_CODE_SELECT_VIDEO = 11;
     private static final int REQUEST_CODE_SELECT_FILE = 12;
     private static final int REQUEST_CODE_GROUP_DETAIL = 13;
@@ -171,12 +170,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
         MessageExtModel model;
         if (TextUtils.isEmpty(extContent)) {
-            model = new MessageExtModel<MessageData>();
+            model = new MessageExtModel();
             model.is_extend_message_content = false;
         } else {
-            Type type = new TypeToken<MessageExtModel<MessageData>>() {
-            }.getType();
-            model = GsonUtils.fromJson(extContent, type);
+            model = GsonUtils.fromJson(extContent, MessageExtModel.class);
         }
         if (null != extModel) {
             model.user = extModel.user;
@@ -215,9 +212,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onAvatarLongClick(EMMessage message) {
         String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
-        Type type = new TypeToken<MessageExtModel<MessageData>>() {
-        }.getType();
-        MessageExtModel<MessageData> model = GsonUtils.fromJson(extContent, type);
+        MessageExtModel model = GsonUtils.fromJson(extContent, MessageExtModel.class);
         inputAtUsername(model.user.easemobile_id);
     }
 
@@ -293,11 +288,33 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 
         @Override
         public int getCustomChatRowType(EMMessage message) {
+            if (message.getType() == EMMessage.Type.TXT) {
+                String messageExt = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
+                MessageExtModel messageExtModel = GsonUtils.fromJson(messageExt, MessageExtModel.class);
+
+                if (null != messageExtModel && messageExtModel.is_extend_message_content) {
+                    if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equalsIgnoreCase(messageExtModel.message_type)) {
+                        // 商品类型
+                        return message.direct() == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PRODUCT : MESSAGE_TYPE_SENT_PRODUCT;
+                    }
+                }
+            }
             return 0;
         }
 
         @Override
         public EaseChatRow getCustomChatRow(EMMessage message, int position, BaseAdapter adapter) {
+            if (message.getType() == EMMessage.Type.TXT) {
+                String messageExt = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
+                MessageExtModel messageExtModel = GsonUtils.fromJson(messageExt, MessageExtModel.class);
+
+                if (null != messageExtModel && messageExtModel.is_extend_message_content) {
+                    if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equalsIgnoreCase(messageExtModel.message_type)) {
+                        // 商品类型
+                        return new EaseChatRowProduct(getActivity(), message, position, adapter);
+                    }
+                }
+            }
             return null;
         }
 

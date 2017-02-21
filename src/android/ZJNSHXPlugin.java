@@ -1,6 +1,7 @@
 package com.bjzjns.hxplugin;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -173,8 +174,6 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                     List<ConversationItemModel> conversationItemList = new ArrayList<ConversationItemModel>();
                     ConversationItemModel conversationItemModel;
                     EMMessage message;
-                    Type typetoken = new TypeToken<MessageExtModel<MessageData>>() {
-                    }.getType();
                     for (EMConversation emConversation : HXManager.getInstance().loadConversationList()) {
                         conversationItemModel = new ConversationItemModel();
                         message = emConversation.getLastMessage();
@@ -188,7 +187,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                         conversationItemModel.messageBodyContent = content;
                         conversationItemModel.messageBodyType = message.getType().ordinal() + "";
                         String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
-                        MessageExtModel extModel = new Gson().fromJson(extContent, typetoken);
+                        MessageExtModel extModel = GsonUtils.fromJson(extContent, MessageExtModel.class);
                         conversationItemModel.ext = extModel;
                         conversationItemList.add(conversationItemModel);
                     }
@@ -209,11 +208,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     private void delConversationItem(String sendVal, CallbackContext callbackContext) {
         LogUtils.d("ZJNSHXPlugin", "delConversationItem");
-        ConversationItemModel conversation = GsonUtils.fromJson(sendVal, ConversationItemModel.class);
-        if (null != conversation) {
+        if (!TextUtils.isEmpty(sendVal)) {
             try {
                 // 删除此会话
-                HXManager.getInstance().delConversation(conversation.conversationId);
+                HXManager.getInstance().delConversation(sendVal);
                 callbackContext.success("delConversationItem success");
             } catch (Exception e) {
                 e.printStackTrace();

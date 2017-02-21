@@ -171,6 +171,10 @@
             target-dir="src/com/bjzjns/hxplugin/tools/video" />
         <source-file src="src/android/view/RecyclingImageView.java"
             target-dir="src/com/bjzjns/hxplugin/view" />
+        <source-file src="src/android/view/chatrow/EaseChatRowProduct.java"
+            target-dir="src/com/bjzjns/hxplugin/view/chatrow" />
+        <source-file src="src/android/res/values/bjzjns_strings.xml" target-dir="res/values" />
+        <source-file src="src/android/res/layout/ease_row_sent_product.xml" target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_choose_griditem.xml" target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_context_menu_for_image.xml"
             target-dir="res/layout" />

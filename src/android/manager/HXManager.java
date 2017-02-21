@@ -18,8 +18,6 @@ import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.tools.LogUtils;
 import com.bjzjns.hxplugin.tools.PackageUtils;
 import com.bjzjns.hxplugin.tools.ToastUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
@@ -35,13 +33,11 @@ import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseNotifier;
-import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
 import com.hyphenate.easeui.model.MessageUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -218,9 +214,7 @@ public class HXManager {
                     ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
                 }
                 String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
-                Type typetoken = new TypeToken<MessageExtModel<MessageData>>() {
-                }.getType();
-                MessageExtModel model = new Gson().fromJson(extContent, typetoken);
+                MessageExtModel model = GsonUtils.fromJson(extContent, MessageExtModel.class);
 
                 MessageUser toUser = null;
                 if (null != model) {
@@ -272,9 +266,7 @@ public class HXManager {
         }
         Intent intent = null;
         String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
-        Type typetoken = new TypeToken<MessageExtModel<MessageData>>() {
-        }.getType();
-        MessageExtModel extModel = new Gson().fromJson(extContent, typetoken);
+        MessageExtModel extModel = GsonUtils.fromJson(extContent, MessageExtModel.class);
         MessageUser user;
         EMMessage.ChatType chatType = message.getChatType();
         if (null != extModel) {
@@ -699,9 +691,7 @@ public class HXManager {
     }
 
     public void startChatActivity(Context context, String sendVal) {
-        Type type = new TypeToken<MessageExtModel<MessageData>>() {
-        }.getType();
-        MessageExtModel<MessageData> model = GsonUtils.fromJson(sendVal, type);
+        MessageExtModel model = GsonUtils.fromJson(sendVal, MessageExtModel.class);
         String currentUserId = HXManager.getInstance().getUserHXId();
         ApplicationInfo appInfo = null;
         String hxMetaData = "";

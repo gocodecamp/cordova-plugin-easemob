@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_product_price">￥%1$s</string>
+    <string name="str_customer_service_welcome_message">欢迎咨询舍舍迦客服，请问有什么可以帮助您？</string>
+</resources>

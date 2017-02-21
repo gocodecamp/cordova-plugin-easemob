@@ -3,7 +3,6 @@ package com.bjzjns.hxplugin.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
 
 /**
@@ -22,7 +21,7 @@ public class ConversationItemModel extends BaseModel implements Parcelable {
     // 消息类型 TXT IMAGE VIDEO LOCATION VOICE FILE CMD
     public String messageBodyType;
     // 消息内容信息
-    public MessageExtModel<MessageData> ext;
+    public MessageExtModel ext;
 
 
     public ConversationItemModel() {
@@ -49,7 +48,7 @@ public class ConversationItemModel extends BaseModel implements Parcelable {
         this.unreadMessagesCount = in.readString();
         this.messageBodyContent = in.readString();
         this.messageBodyType = in.readString();
-        this.ext = in.readParcelable(ext.getClass().getClassLoader());
+        this.ext = in.readParcelable(MessageExtModel.class.getClassLoader());
     }
 
     public static final Creator<ConversationItemModel> CREATOR = new Creator<ConversationItemModel>() {
