@@ -3,8 +3,10 @@ package com.bjzjns.hxplugin;
 import android.content.Context;
 import android.text.TextUtils;
 
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,21 +14,16 @@ import org.json.JSONException;
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.model.ConversationItemModel;
 import com.bjzjns.hxplugin.model.ConversationListModel;
-import com.bjzjns.hxplugin.model.ObjectModel;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.tools.LogUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
-import com.hyphenate.easeui.model.MessageData;
 import com.hyphenate.easeui.model.MessageExtModel;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,13 +46,25 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     // 订阅会话列表变化消息
     private static final String REGISTER_SUBSCRIBERS_MESSAGE = "registerSubscribersMessage";
     private static CallbackContext mCallbackContext;
+    private static CordovaWebView mWebView;
+
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+        mWebView = webView;
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         LogUtils.d("ZJNSHXPlugin", "action =" + action + ",args =" + args.toString());
         if (action.equals(INIT_HX)) {
-            initHX();
-            callbackContext.success("initEaseMobile success");
+            try {
+                initHX();
+                callbackContext.success("initEaseMobile success");
+            } catch (Exception e) {
+                callbackContext.error("initEaseMobile error:" + e.toString());
+            }
+
             return true;
         } else if (action.equals(LOGIN_HX)) {
             loginHX(args.getString(0), args.getString(1), callbackContext);
@@ -80,7 +89,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     }
 
     private Context getContext() {
-        return this.cordova.getActivity().getBaseContext();
+        return this.cordova.getActivity();
     }
 
     /**
@@ -88,7 +97,12 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     private void initHX() {
         LogUtils.d("ZJNSHXPlugin", "initHX");
-        HXManager.getInstance().init(this.cordova.getActivity().getApplicationContext());
+        this.cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                HXManager.getInstance().init(cordova.getActivity().getApplicationContext());
+            }
+        });
     }
 
     /**
@@ -96,9 +110,14 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      *
      * @param sendVal
      */
-    private void gotoChat(String sendVal) {
+    private void gotoChat(final String sendVal) {
         LogUtils.d("ZJNSHXPlugin", "gotoChat");
-        HXManager.getInstance().startChatActivity(getContext(), sendVal);
+        this.cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                HXManager.getInstance().startChatActivity(getContext(), sendVal);
+            }
+        });
     }
 
     /**
@@ -192,6 +211,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                         conversationItemList.add(conversationItemModel);
                     }
                     conversationListModel.conversationList = conversationItemList;
+                    LogUtils.d("ZJNSHXPlugin", "AllConversation:" + GsonUtils.toJson(conversationListModel));
                     callbackContext.success(GsonUtils.toJson(conversationListModel));
                 } catch (Exception e) {
                     callbackContext.error("load error");
@@ -206,13 +226,18 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param sendVal
      * @param callbackContext
      */
-    private void delConversationItem(String sendVal, CallbackContext callbackContext) {
+    private void delConversationItem(final String sendVal, final CallbackContext callbackContext) {
         LogUtils.d("ZJNSHXPlugin", "delConversationItem");
         if (!TextUtils.isEmpty(sendVal)) {
             try {
-                // 删除此会话
-                HXManager.getInstance().delConversation(sendVal);
-                callbackContext.success("delConversationItem success");
+                this.cordova.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 删除此会话
+                        HXManager.getInstance().delConversation(sendVal);
+                        callbackContext.success("delConversationItem success");
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
                 callbackContext.error("del conversationitem fail");
@@ -241,9 +266,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      *
      * @param sendVal
      */
-    public void gotoDesignerDeatil(String sendVal) {
-        ObjectModel objectModel = GsonUtils.fromJson(sendVal, ObjectModel.class);
-        this.webView.loadUrl("javascript:goToDesignerDetial(" + objectModel.id + ")");
+    public static void gotoDesignerDeatil(String sendVal) {
+        if (null != mWebView) {
+            mWebView.loadUrl("javascript:goToDesignerDetial(" + sendVal + ")");
+        }
     }
 
     /**
@@ -251,9 +277,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      *
      * @param sendVal
      */
-    public void gotoUserDetail(String sendVal) {
-        ObjectModel objectModel = GsonUtils.fromJson(sendVal, ObjectModel.class);
-        this.webView.loadUrl("javascript:goToUserDetail(" + objectModel.id + ")");
+    public static void gotoUserDetail(String sendVal) {
+        if (null != mWebView) {
+            mWebView.loadUrl("javascript:goToUserDetail(" + sendVal + ")");
+        }
     }
 
     /**
@@ -261,8 +288,9 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      *
      * @param sendVal
      */
-    public void gotoProductDetail(String sendVal) {
-        ObjectModel objectModel = GsonUtils.fromJson(sendVal, ObjectModel.class);
-        this.webView.loadUrl("javascript:goToProductDetail(" + objectModel.id + ")");
+    public static void gotoProductDetail(String sendVal) {
+        if (null != mWebView) {
+            mWebView.loadUrl("javascript:goToProductDetail(" + sendVal + ")");
+        }
     }
 }

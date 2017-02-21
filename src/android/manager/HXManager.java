@@ -282,7 +282,7 @@ public class HXManager {
                 extModel.user.head_thumb = getUserAvatar();
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, extModel);
+            intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, GsonUtils.toJson(extModel));
             intent.putExtra(EaseConstant.EXTRA_HXMETADATA, hxMetaData);
             intent.putExtra(EaseConstant.EXTRA_CURRENTUSERID, getUserHXId());
         }
@@ -290,7 +290,7 @@ public class HXManager {
     }
 
     private EaseUser getUserInfo(String username) {
-        if (getUserId().equalsIgnoreCase(username)) {
+        if (username.equalsIgnoreCase(getUserHXId())) {
             EaseUser user = new EaseUser(username);
             user.setNick(getUserNickName());
             user.setAvatar(getUserAvatar());
@@ -691,7 +691,6 @@ public class HXManager {
     }
 
     public void startChatActivity(Context context, String sendVal) {
-        MessageExtModel model = GsonUtils.fromJson(sendVal, MessageExtModel.class);
         String currentUserId = HXManager.getInstance().getUserHXId();
         ApplicationInfo appInfo = null;
         String hxMetaData = "";
@@ -708,7 +707,7 @@ public class HXManager {
 
         Intent intent = new Intent(context, ChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, model);
+        intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, sendVal);
         intent.putExtra(EaseConstant.EXTRA_HXMETADATA, hxMetaData);
         intent.putExtra(EaseConstant.EXTRA_CURRENTUSERID, currentUserId);
         context.startActivity(intent);

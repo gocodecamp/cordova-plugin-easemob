@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="color_toolbar_lefttxt">#000000</color>
+    <color name="color_toolbar_title">#000000</color>
+    <color name="color_toolbar_righttxt">#535353</color>
+    <color name="color_toolbar_background">#FFFFFF</color>
+</resources>

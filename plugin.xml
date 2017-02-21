@@ -31,7 +31,8 @@
             <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
             <uses-permission android:name="android.permission.BROADCAST_STICKY" />
             <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-            <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+            <uses-permission
+                android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
             <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
         </config-file>
         <source-file src="src/android/ZJNSHXPlugin.java" target-dir="src/com/bjzjns/hxplugin" />
@@ -40,20 +41,13 @@
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <!-- 设置环信应用的appkey -->
-            <meta-data
-                android:name="EASEMOB_APPKEY"
-                android:value="easemob-demo#chatdemoui" />
-            <meta-data
-                android:name="com.baidu.lbsapi.API_KEY"
+            <meta-data android:name="EASEMOB_APPKEY" android:value="bjzjnssinacom#ssjzjns" />
+            <meta-data android:name="com.baidu.lbsapi.API_KEY"
                 android:value="3ecea51f560650b1ed8a4b99808f52e8" />
             <!-- 声明sdk所需的service -->
-            <service
-                android:name="com.hyphenate.chat.EMChatService"
-                android:exported="true" />
+            <service android:name="com.hyphenate.chat.EMChatService" android:exported="true" />
 
-            <service
-                android:name="com.hyphenate.chat.EMJobService"
-                android:exported="true"
+            <service android:name="com.hyphenate.chat.EMJobService" android:exported="true"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
 
             <!-- 声明sdk所需的receiver -->
@@ -70,50 +64,93 @@
                 </intent-filter>
             </receiver>
 
+            <!-- 开机自启动服务 -->
+            <receiver android:name=".receiver.StartServiceReceiver">
+                <intent-filter android:priority="1000">
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </receiver>
+
+            <!-- mi push -->
+            <service android:name="com.xiaomi.mipush.sdk.PushMessageHandler" android:enabled="true"
+                android:exported="true" />
+            <service android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+                android:enabled="true" />
+
+            <receiver android:name="com.hyphenate.chat.EMMipushReceiver" android:exported="true">
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.xiaomi.mipush.ERROR" />
+                </intent-filter>
+            </receiver>
+            <!-- mi push end -->
+
+
+            <!-- huawei push 第三方相关 :接收Push消息（注册、Push消息、Push连接状态、标签，LBS上报结果）广播 -->
+            <receiver android:name="com.hyphenate.chat.EMHuaweiPushReceiver"
+                android:exported="true">
+                <intent-filter>
+
+                    <!-- 必须,用于接收token -->
+                    <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                    <!-- 必须，用于接收消息 -->
+                    <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                </intent-filter>
+                />
+                <meta-data android:name="CS_cloud_ablitity" android:value="successRateAnalytics" />
+            </receiver>
+
+            <!-- PushSDK:PushSDK接收外部请求事件入口 -->
+            <receiver android:name="com.huawei.android.pushagent.PushEventReceiver"
+                android:exported="true" android:process=":pushservice">
+                <intent-filter>
+                    <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL" />
+                    <action android:name="com.huawei.intent.action.PUSH" />
+                    <action android:name="com.huawei.intent.action.PUSH_ON" />
+                    <action android:name="com.huawei.android.push.PLUGIN" />
+                </intent-filter>
+            </receiver>
+
+            <!-- PushSDK:Push服务 -->
+            <service android:name="com.huawei.android.pushagent.PushService"
+                android:process=":pushservice" />
+
+            <!-- huawei push end -->
+
             <!-- 百度地图所需的service -->
-            <service
-                android:name="com.baidu.location.f"
-                android:enabled="true"
+            <service android:name="com.baidu.location.f" android:enabled="true"
                 android:process=":remote" />
 
-            <activity
-                android:name="com.bjzjns.hxplugin.activity.ChatActivity"
-                android:screenOrientation="portrait"
-                android:launchMode="singleTask"
+            <activity android:name="com.bjzjns.hxplugin.activity.ChatActivity"
+                android:launchMode="singleTask" android:screenOrientation="portrait"
                 android:theme="@style/horizontal_slide"
-                android:windowSoftInputMode="adjustResize"/>
-            <activity
-                android:name="com.bjzjns.hxplugin.activity.ContextMenuActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/MyDialogStyle" />
-            <activity
-                android:name="com.bjzjns.hxplugin.activity.ImageGridActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide"
+                android:windowSoftInputMode="adjustResize" />
+            <activity android:name="com.bjzjns.hxplugin.activity.ContextMenuActivity"
+                android:screenOrientation="portrait" android:theme="@style/MyDialogStyle" />
+            <activity android:name="com.bjzjns.hxplugin.activity.ImageGridActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
-            <activity
-                android:name="com.bjzjns.hxplugin.activity.RecorderVideoActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide"
+            <activity android:name="com.bjzjns.hxplugin.activity.RecorderVideoActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
-            <activity
-                android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide" />
+            <activity android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide" />
             <!-- 显示下载大图页面 -->
-            <activity
-                android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide" />
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide" />
             <!-- 下载文件 -->
-            <activity
-                android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide" />
-            <activity
-                android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/horizontal_slide"
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide" />
+            <activity android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+                android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
         </config-file>
         <source-file src="src/android/activity/ChatActivity.java"
@@ -140,8 +177,6 @@
         <source-file src="src/android/model/ConversationListModel.java"
             target-dir="src/com/bjzjns/hxplugin/model" />
         <source-file src="src/android/model/HXUserModel.java"
-            target-dir="src/com/bjzjns/hxplugin/model" />
-        <source-file src="src/android/model/ObjectModel.java"
             target-dir="src/com/bjzjns/hxplugin/model" />
         <source-file src="src/android/model/VideoEntityModel.java"
             target-dir="src/com/bjzjns/hxplugin/model" />
@@ -174,7 +209,11 @@
         <source-file src="src/android/view/chatrow/EaseChatRowProduct.java"
             target-dir="src/com/bjzjns/hxplugin/view/chatrow" />
         <source-file src="src/android/res/values/bjzjns_strings.xml" target-dir="res/values" />
-        <source-file src="src/android/res/layout/ease_row_sent_product.xml" target-dir="res/layout" />
+        <source-file src="src/android/res/values/bjzjns_colors.xml" target-dir="res/values" />
+        <source-file src="src/android/res/layout/ease_row_sent_product.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/toolbar_include_layout.xml"
+            target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_choose_griditem.xml" target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_context_menu_for_image.xml"
             target-dir="res/layout" />
@@ -188,30 +227,34 @@
             target-dir="res/layout" />
         <source-file src="src/android/res/layout/em_image_grid_fragment.xml"
             target-dir="res/layout" />
-        <source-file src="src/android/res/layout/em_recorder_activity.xml" target-dir="res/layout" />
+        <source-file src="src/android/res/layout/em_recorder_activity.xml"
+            target-dir="res/layout" />
         <source-file src="src/android/res/layout/im_activity_chat.xml" target-dir="res/layout" />
-        <source-file src="src/android/res/drawable/em_actionbar_camera_icon.png"
-            target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_camera_switch_normal.9.png"
-            target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_camera_switch_pressed.9.png"
-            target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_camera_switch_selector.xml"
-            target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_chat_video_normal.png"
-            target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_chat_video_pressed.png"
             target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_chat_video_selector.xml"
             target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_context_menu_item_bg.xml"
             target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_empty_photo.png" target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_photogrid_list_selector.xml"
             target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_video_recorder_start_btn.png"
-            target-dir="res/drawable" />
-        <source-file src="src/android/res/drawable/em_video_recorder_stop_btn.png"
-            target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable-xhdpi/em_actionbar_camera_icon.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_camera_switch_normal.9.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_camera_switch_pressed.9.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_video_recorder_start_btn.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_video_recorder_stop_btn.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_empty_photo.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_chat_video_normal.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/em_chat_video_pressed.png"
+            target-dir="res/drawable-xhdpi" />
+        <source-file src="src/android/res/drawable-xhdpi/icon_back.png"
+            target-dir="res/drawable-xhdpi" />
     </platform>
 </plugin>

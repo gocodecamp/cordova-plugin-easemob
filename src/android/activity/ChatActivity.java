@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bjzjns.hxplugin.ZJNSHXPlugin;
 import com.bjzjns.hxplugin.fragment.ChatFragment;
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.permissions.PermissionsManager;
@@ -31,18 +36,50 @@ public class ChatActivity extends EaseBaseActivity {
     private EaseChatFragment chatFragment;
     private String toChatUserId;
     private MessageExtModel extModel;
+    private TextView leftTv;
+    private TextView title;
+    private TextView rightTv;
+    private ImageView leftBtn;
+    private ImageView rightBtn;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(getResources().getIdentifier("im_activity_chat", "layout", getPackageName()));
+        leftBtn = (ImageView) findViewById(getResources().getIdentifier("toolbar_leftbtn", "id", getPackageName()));
+        leftTv = (TextView) findViewById(getResources().getIdentifier("toolbar_lefttxt", "id", getPackageName()));
+        title = (TextView) findViewById(getResources().getIdentifier("title", "id", getPackageName()));
+        rightTv = (TextView) findViewById(getResources().getIdentifier("toolbar_righttxt", "id", getPackageName()));
+        rightBtn = (ImageView) findViewById(getResources().getIdentifier("toolbar_rightbtn", "id", getPackageName()));
         activityInstance = this;
         toChatUserId = "-1";
-
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         //聊天人或群id
-        extModel = getIntent().getExtras().getParcelable(EaseConstant.EXTRA_EXT_MODEL);
+        extModel = GsonUtils.fromJson(getIntent().getExtras().getString(EaseConstant.EXTRA_EXT_MODEL, ""), MessageExtModel.class);
         if (null != extModel && null != extModel.touser) {
             toChatUserId = extModel.touser.easemobile_id;
+            if (!TextUtils.isEmpty(extModel.touser.nickname)) {
+                title.setText(extModel.touser.nickname);
+            } else {
+                title.setText(extModel.touser.easemobile_id);
+            }
+            if (EaseConstant.CHATTYPE_DESIGNER == extModel.message_scene) {
+                rightTv.setText(getResources().getIdentifier("str_look_designer", "string", getPackageName()));
+                rightTv.setVisibility(View.VISIBLE);
+                rightTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ZJNSHXPlugin.gotoDesignerDeatil(extModel.touser.username);
+                    }
+                });
+            } else {
+                rightTv.setVisibility(View.GONE);
+            }
         }
 
         updateView();
@@ -65,7 +102,7 @@ public class ChatActivity extends EaseBaseActivity {
     protected void onNewIntent(Intent intent) {
         // 点击notification bar进入聊天页面，保证只有一个聊天页面
         String userId = "";
-        extModel = getIntent().getExtras().getParcelable(EaseConstant.EXTRA_EXT_MODEL);
+        extModel = GsonUtils.fromJson(getIntent().getExtras().getString(EaseConstant.EXTRA_EXT_MODEL, ""), MessageExtModel.class);
         if (null != extModel && null != extModel.touser) {
             userId = extModel.touser.easemobile_id;
         }

@@ -16,8 +16,8 @@ myFunc.prototype.getAllConversations=function(success, error) {
 myFunc.prototype.delConversationItem=function(conversation, success, error) {
     exec(success, error, "ZJNSHXPlugin", "delConversationItem", [conversation]);
 };
-myFunc.prototype.gotoChat=function(ext, success, error) {
-    exec(success, error, "ZJNSHXPlugin", "gotoChat", [ext]);
+myFunc.prototype.gotoChat=function(ext) {
+    exec(null, null, "ZJNSHXPlugin", "gotoChat", [ext]);
 };
 
 var zjnsPlugin = new myFunc();
