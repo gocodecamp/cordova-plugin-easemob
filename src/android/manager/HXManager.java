@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.bjzjns.hxplugin.ZJNSHXPlugin;
 import com.bjzjns.hxplugin.activity.ChatActivity;
 import com.bjzjns.hxplugin.im.HXContext;
 import com.bjzjns.hxplugin.im.HXPreferenceManager;
@@ -463,7 +464,7 @@ public class HXManager {
 
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
-
+                ZJNSHXPlugin.updateSubscribersMessage();
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     //应用在后台，不需要刷新UI,通知栏提示新消息

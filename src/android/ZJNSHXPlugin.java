@@ -131,6 +131,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
         HXManager.getInstance().loginHX(userName, password, new EMCallBack() {
             @Override
             public void onSuccess() {
+                LogUtils.d("ZJNSHXPlugin", "login success");
                 callbackContext.success("login success");
                 cordova.getThreadPool().execute(new Runnable() {
                     @Override
@@ -143,6 +144,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int i, String s) {
+                LogUtils.d("ZJNSHXPlugin", "login error:" + i + ":" + s);
                 callbackContext.error("login error:" + i + ":" + s);
             }
 
@@ -164,6 +166,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onSuccess() {
+                LogUtils.d("ZJNSHXPlugin", "logout success");
                 callbackContext.success("logout success");
             }
 
@@ -173,6 +176,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int code, String error) {
+                LogUtils.d("ZJNSHXPlugin", "logout error:" + code + ":" + error);
                 callbackContext.error("logout error:" + code + ":" + error);
             }
         });
@@ -201,7 +205,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                         conversationItemModel.timestamp = message.getMsgTime() + "";
                         String content = "";
                         if (EMMessage.Type.TXT == message.getType()) {
-                            ((EMTextMessageBody) message.getBody()).getMessage();
+                            content = ((EMTextMessageBody) message.getBody()).getMessage();
                         }
                         conversationItemModel.messageBodyContent = content;
                         conversationItemModel.messageBodyType = message.getType().ordinal() + "";
@@ -211,10 +215,11 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                         conversationItemList.add(conversationItemModel);
                     }
                     conversationListModel.conversationList = conversationItemList;
-                    LogUtils.d("ZJNSHXPlugin", "AllConversation:" + GsonUtils.toJson(conversationListModel));
+                    LogUtils.d("ZJNSHXPlugin", "AllConversation gson data:" + GsonUtils.toJson(conversationListModel));
                     callbackContext.success(GsonUtils.toJson(conversationListModel));
                 } catch (Exception e) {
-                    callbackContext.error("load error");
+                    LogUtils.d("ZJNSHXPlugin", "loadAllConversation exception:" + e.toString());
+                    callbackContext.error("loadAllConversation exception:" + e.toString());
                 }
             }
         });
@@ -235,14 +240,17 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                     public void run() {
                         // 删除此会话
                         HXManager.getInstance().delConversation(sendVal);
+                        LogUtils.d("ZJNSHXPlugin", "delConversationItem success");
                         callbackContext.success("delConversationItem success");
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                callbackContext.error("del conversationitem fail");
+                LogUtils.d("ZJNSHXPlugin", "delConversationItem exception:" + e.toString());
+                callbackContext.error("delConversationItem exception:" + e.toString());
             }
         } else {
+            LogUtils.d("ZJNSHXPlugin", "delConversationItem you not send data");
             callbackContext.error("you not send data");
         }
     }
@@ -250,11 +258,11 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     /**
      * 发送订阅会话列表变化的消息
      *
-     * @param messageContent
      */
-    public static void updateSubscribersMessage(String messageContent) {
+    public static void updateSubscribersMessage() {
         if (null != mCallbackContext) {
-            PluginResult dataResult = new PluginResult(PluginResult.Status.OK, messageContent);
+            LogUtils.d("ZJNSHXPlugin", "updateSubscribersMessage");
+            PluginResult dataResult = new PluginResult(PluginResult.Status.OK);
             // 非常重要
             dataResult.setKeepCallback(true);
             mCallbackContext.sendPluginResult(dataResult);
@@ -268,6 +276,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoDesignerDeatil(String sendVal) {
         if (null != mWebView) {
+            LogUtils.d("ZJNSHXPlugin", "gotoDesignerDeatil sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToDesignerDetial(" + sendVal + ")");
         }
     }
@@ -279,6 +288,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoUserDetail(String sendVal) {
         if (null != mWebView) {
+            LogUtils.d("ZJNSHXPlugin", "gotoUserDetail sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToUserDetail(" + sendVal + ")");
         }
     }
@@ -290,6 +300,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoProductDetail(String sendVal) {
         if (null != mWebView) {
+            LogUtils.d("ZJNSHXPlugin", "gotoProductDetail sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToProductDetail(" + sendVal + ")");
         }
     }

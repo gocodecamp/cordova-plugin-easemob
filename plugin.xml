@@ -238,6 +238,8 @@
             target-dir="res/drawable" />
         <source-file src="src/android/res/drawable/em_photogrid_list_selector.xml"
             target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/rectangle_black_ground_transparent_border.xml"
+            target-dir="res/drawable" />
         <source-file src="src/android/res/drawable-xhdpi/em_actionbar_camera_icon.png"
             target-dir="res/drawable-xhdpi" />
         <source-file src="src/android/res/drawable-xhdpi/em_camera_switch_normal.9.png"

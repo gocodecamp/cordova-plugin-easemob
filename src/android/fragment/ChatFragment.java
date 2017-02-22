@@ -16,11 +16,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.bjzjns.hxplugin.ZJNSHXPlugin;
 import com.bjzjns.hxplugin.activity.ContextMenuActivity;
 import com.bjzjns.hxplugin.activity.ImageGridActivity;
+import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.view.chatrow.EaseChatRowProduct;
-import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
@@ -34,6 +35,8 @@ import com.hyphenate.util.PathUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper {
 
@@ -206,6 +209,27 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onAvatarClick(EMMessage message) {
         //handling when user click avatar
+        String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
+        MessageExtModel model = GsonUtils.fromJson(extContent, MessageExtModel.class);
+        if (null != model && null != model.user) {
+            if (!TextUtils.isEmpty(HXManager.getInstance().getUserHXId()) && HXManager.getInstance().getUserHXId().equals(model.user.easemobile_id)) {
+                ZJNSHXPlugin.gotoUserDetail(model.user.username);
+                getActivity().finish();
+            } else {
+                switch (model.message_scene) {
+                    case MessageExtModel.MESSAGE_SCENE_DESIGNER:
+                        ZJNSHXPlugin.gotoDesignerDeatil(model.user.username);
+                        getActivity().finish();
+                        break;
+                    case MessageExtModel.MESSAGE_SCENE_CUSTOMER_SERVICE:
+                        break;
+                    default:
+                        ZJNSHXPlugin.gotoUserDetail(model.user.username);
+                        getActivity().finish();
+                        break;
+                }
+            }
+        }
 
     }
 
@@ -220,18 +244,26 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public boolean onMessageBubbleClick(EMMessage message) {
         //消息框点击事件，demo这里不做覆盖，如需覆盖，return true
+        String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
+        MessageExtModel model = GsonUtils.fromJson(extContent, MessageExtModel.class);
+        if (null != model && MessageExtModel.MESSAGE_SCENE_DESIGNER == model.message_scene
+                && EMMessage.Type.TXT == message.getType()) {
+            EMTextMessageBody textMessageBody = (EMTextMessageBody) message.getBody();
+            String messageContent = textMessageBody.getMessage();
+            Pattern p = Pattern.compile("^((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9])|(9{3}))\\d{8}$");
+            Matcher m = p.matcher(messageContent);
+            if (m.matches()) {
+                String productId = "";
+                ZJNSHXPlugin.gotoProductDetail(productId);
+                getActivity().finish();
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
-        //red packet code : 处理红包回执透传消息
-        for (EMMessage message : messages) {
-            EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
-            String action = cmdMsgBody.action();//获取自定义action
-
-        }
-        //end of red packet code
         super.onCmdMessageReceived(messages);
     }
 

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,20 +60,28 @@ public class ChatActivity extends EaseBaseActivity {
         });
         //聊天人或群id
         extModel = GsonUtils.fromJson(getIntent().getExtras().getString(EaseConstant.EXTRA_EXT_MODEL, ""), MessageExtModel.class);
-        if (null != extModel && null != extModel.touser) {
-            toChatUserId = extModel.touser.easemobile_id;
-            if (!TextUtils.isEmpty(extModel.touser.nickname)) {
-                title.setText(extModel.touser.nickname);
-            } else {
-                title.setText(extModel.touser.easemobile_id);
+        if (null != extModel) {
+            if (null != extModel.touser) {
+                toChatUserId = extModel.touser.easemobile_id;
+                if (!TextUtils.isEmpty(extModel.touser.nickname)) {
+                    title.setText(extModel.touser.nickname);
+                } else {
+                    title.setText(extModel.touser.easemobile_id);
+                }
             }
             if (EaseConstant.CHATTYPE_DESIGNER == extModel.message_scene) {
+                if (!TextUtils.isEmpty(extModel.brand_name)) {
+                    title.setText(extModel.brand_name);
+                }
                 rightTv.setText(getResources().getIdentifier("str_look_designer", "string", getPackageName()));
                 rightTv.setVisibility(View.VISIBLE);
                 rightTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ZJNSHXPlugin.gotoDesignerDeatil(extModel.touser.username);
+                        if (null != extModel.touser) {
+                            ZJNSHXPlugin.gotoDesignerDeatil(extModel.touser.username);
+                            finish();
+                        }
                     }
                 });
             } else {
@@ -132,26 +139,29 @@ public class ChatActivity extends EaseBaseActivity {
     private void sendCSWelcomeMessage() {
         if (null != extModel && MessageExtModel.MESSAGE_SCENE_CUSTOMER_SERVICE == extModel.message_scene) {
             MessageExtModel model = new MessageExtModel();
-            model.is_extend_message_content = extModel.is_extend_message_content;
-            model.data = extModel.data;
+            model.is_extend_message_content = false;
             model.message_scene = extModel.message_scene;
-            model.message_type = extModel.message_type;
             model.user = extModel.touser;
             model.touser = extModel.user;
 
             if (null != model.touser) {
-                EMMessage message = EMMessage.createTxtSendMessage(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName())), model.touser.easemobile_id);
+                final EMMessage message = EMMessage.createTxtSendMessage(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName())), model.touser.easemobile_id);
                 String extContent = GsonUtils.toJson(model);
                 message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
-                EMClient.getInstance().chatManager().sendMessage(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EMClient.getInstance().chatManager().sendMessage(message);
+                    }
+                });
             }
         }
     }
 
     private void updateProductView() {
         if (null != extModel && extModel.is_extend_message_content
-                && null != extModel.touser && null != extModel.data
-                && MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equals(extModel.message_type)) {
+                && MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equals(extModel.message_type)
+                && null != extModel.touser && null != extModel.data) {
             EMMessage message = EMMessage.createTxtSendMessage(extModel.data.name, extModel.touser.easemobile_id);
             String extContent = GsonUtils.toJson(extModel);
             message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);

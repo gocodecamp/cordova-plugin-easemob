@@ -5,8 +5,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bjzjns.hxplugin.ZJNSHXPlugin;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
@@ -23,6 +25,7 @@ public class EaseChatRowProduct extends EaseChatRow {
     private TextView priceTv;
     private TextView hyperLinkTv;
     private ImageView pictureIv;
+    private LinearLayout contentLl;
     private MessageData data;
     private Context context;
 
@@ -38,6 +41,7 @@ public class EaseChatRowProduct extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
+        contentLl = (LinearLayout) findViewById(getResources().getIdentifier("content_ll", "id", context.getPackageName()));
         pictureIv = (ImageView) findViewById(getResources().getIdentifier("image", "id", context.getPackageName()));
         titleTv = (TextView) findViewById(getResources().getIdentifier("title_tv", "id", context.getPackageName()));
         priceTv = (TextView) findViewById(getResources().getIdentifier("price_tv", "id", context.getPackageName()));
@@ -56,6 +60,12 @@ public class EaseChatRowProduct extends EaseChatRow {
                 if (!TextUtils.isEmpty(data.imgSrc)) {
                     Glide.with(context).load(data.imgSrc).into(pictureIv);
                 }
+                contentLl.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ZJNSHXPlugin.gotoProductDetail(model.data.product_id);
+                    }
+                });
                 hyperLinkTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -70,7 +80,6 @@ public class EaseChatRowProduct extends EaseChatRow {
     private void sendProductMessage(MessageExtModel model) {
         model.is_extend_message_content = false;
         MessageData messageData = model.data;
-        model.data = null;
         if (null != model && null != model.touser && null != messageData) {
             EMMessage message = EMMessage.createTxtSendMessage(messageData.url, model.touser.easemobile_id);
             String extContent = GsonUtils.toJson(model);
