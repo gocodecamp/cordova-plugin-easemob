@@ -175,13 +175,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         if (TextUtils.isEmpty(extContent)) {
             model = new MessageExtModel();
             model.is_extend_message_content = false;
+            if (null != extModel) {
+                model.user = extModel.user;
+                model.touser = extModel.touser;
+                model.message_scene = extModel.message_scene;
+            }
         } else {
             model = GsonUtils.fromJson(extContent, MessageExtModel.class);
-        }
-        if (null != extModel) {
-            model.user = extModel.user;
-            model.touser = extModel.touser;
-            model.message_scene = extModel.message_scene;
         }
         message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, GsonUtils.toJson(model));
     }
@@ -250,7 +250,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                 && EMMessage.Type.TXT == message.getType()) {
             EMTextMessageBody textMessageBody = (EMTextMessageBody) message.getBody();
             String messageContent = textMessageBody.getMessage();
-            Pattern p = Pattern.compile("^((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9])|(9{3}))\\d{8}$");
+            Pattern p = Pattern.compile("^http://ssj.*$");
             Matcher m = p.matcher(messageContent);
             if (m.matches()) {
                 String productId = "";

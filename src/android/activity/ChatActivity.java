@@ -17,6 +17,7 @@ import com.bjzjns.hxplugin.permissions.PermissionsManager;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.model.MessageExtModel;
@@ -25,6 +26,7 @@ import com.hyphenate.easeui.ui.EaseChatFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 聊天页面
@@ -89,14 +91,13 @@ public class ChatActivity extends EaseBaseActivity {
             }
         }
 
-        updateView();
-
         //可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
         //传入参数
         chatFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(getResources().getIdentifier("container", "id", getPackageName()), chatFragment).commit();
 
+        updateView();
     }
 
     @Override
@@ -145,21 +146,27 @@ public class ChatActivity extends EaseBaseActivity {
             model.touser = extModel.user;
 
             if (null != model.touser) {
-                final EMMessage message = EMMessage.createTxtSendMessage(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName())), model.touser.easemobile_id);
+                EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                message.setChatType(EMMessage.ChatType.Chat);
+                message.setFrom(model.user.easemobile_id);
+                message.setTo(model.touser.easemobile_id);
+                message.setMsgId(UUID.randomUUID().toString());
+                message.addBody(new EMTextMessageBody(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName()))));
+                message.setStatus(EMMessage.Status.SUCCESS);
                 String extContent = GsonUtils.toJson(model);
                 message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        EMClient.getInstance().chatManager().sendMessage(message);
-                    }
-                });
+                List<EMMessage> msgs = new ArrayList<EMMessage>();
+                msgs.add(message);
+                EMClient.getInstance().chatManager().importMessages(msgs);
+                // 保存同意消息
+                EMClient.getInstance().chatManager().saveMessage(message);
             }
         }
     }
 
     private void updateProductView() {
-        if (null != extModel && extModel.is_extend_message_content
+        if (null != extModel && MessageExtModel.MESSAGE_SCENE_DESIGNER == extModel.message_scene
+                && extModel.is_extend_message_content
                 && MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equals(extModel.message_type)
                 && null != extModel.touser && null != extModel.data) {
             EMMessage message = EMMessage.createTxtSendMessage(extModel.data.name, extModel.touser.easemobile_id);
@@ -170,7 +177,9 @@ public class ChatActivity extends EaseBaseActivity {
             msgs.add(message);
             EMClient.getInstance().chatManager().importMessages(msgs);
             EMClient.getInstance().chatManager().saveMessage(message);
-            chatFragment.refreshMessage();
+            if (null != chatFragment) {
+                chatFragment.refreshMessage();
+            }
         }
     }
 

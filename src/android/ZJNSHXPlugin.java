@@ -208,7 +208,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                             content = ((EMTextMessageBody) message.getBody()).getMessage();
                         }
                         conversationItemModel.messageBodyContent = content;
-                        conversationItemModel.messageBodyType = message.getType().ordinal() + "";
+                        conversationItemModel.messageBodyType = message.getType().ordinal() + 1 + "";
                         String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
                         MessageExtModel extModel = GsonUtils.fromJson(extContent, MessageExtModel.class);
                         conversationItemModel.ext = extModel;

@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -44,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bjzjns.hxplugin.permissions.PermissionsManager;
 import com.bjzjns.hxplugin.tools.video.Utils;
 import com.hyphenate.easeui.ui.EaseBaseActivity;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -590,5 +592,11 @@ public class RecorderVideoActivity extends EaseBaseActivity implements
 
                             }
                         }).setCancelable(false).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }
