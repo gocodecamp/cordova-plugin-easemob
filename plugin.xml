@@ -2,6 +2,7 @@
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-easemob"
     version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>ZJNSHXPlugin</name>
+    <preference name="EASEMOB_KEY" />
     <js-module name="EasemobPlugin" src="www/ZJNSHXPlugin.js">
         <clobbers target="EasemobPlugin" />
     </js-module>
@@ -41,7 +42,7 @@
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <!-- 设置环信应用的appkey -->
-            <meta-data android:name="EASEMOB_APPKEY" android:value="bjzjnssinacom#ssjzjns" />
+            <meta-data android:name="EASEMOB_APPKEY" android:value="$EASEMOB_KEY" />
             <meta-data android:name="com.baidu.lbsapi.API_KEY"
                 android:value="3ecea51f560650b1ed8a4b99808f52e8" />
             <!-- 声明sdk所需的service -->
