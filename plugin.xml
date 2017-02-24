@@ -259,4 +259,18 @@
         <source-file src="src/android/res/drawable-xhdpi/icon_back.png"
             target-dir="res/drawable-xhdpi" />
     </platform>
+    
+    <platform name="ios">
+        <source-file src="src/ios/ZJNSEaseMobileManager.m" />
+        <header-file src="src/ios/ZJNSEaseMobileManager.h" />
+        <source-file src="src/ios/ZJNSEaseMobileConversationModel.m" />
+        <header-file src="src/ios/ZJNSEaseMobileConversationModel.h" />
+        
+        
+        <config-file target="config.xml" parent="/widget">
+            <feature name="ZJNSEaseMobileManager">
+                <param name="ios-package" value="ZJNSEaseMobileManager" />
+            </feature>
+        </config-file>
+    </platform>
 </plugin>
