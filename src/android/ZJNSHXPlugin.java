@@ -43,9 +43,6 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     private static final String DEL_CONVERSATION_ITEM = "delConversationItem";
     // 进入聊天
     private static final String GOTO_CHAT = "gotoChat";
-    // 订阅会话列表变化消息
-    private static final String REGISTER_SUBSCRIBERS_MESSAGE = "registerSubscribersMessage";
-    private static CallbackContext mCallbackContext;
     private static CordovaWebView mWebView;
 
     @Override
@@ -80,9 +77,6 @@ public class ZJNSHXPlugin extends CordovaPlugin {
             return true;
         } else if (action.equals(GOTO_CHAT)) {
             gotoChat(args.getString(0));
-            return true;
-        } else if (action.equals(REGISTER_SUBSCRIBERS_MESSAGE)) {
-            mCallbackContext = callbackContext;
             return true;
         }
         return false;
@@ -256,16 +250,12 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     }
 
     /**
-     * 发送订阅会话列表变化的消息
-     *
+     * 通知会话列表变化
      */
-    public static void updateSubscribersMessage() {
-        if (null != mCallbackContext) {
-            LogUtils.d("ZJNSHXPlugin", "updateSubscribersMessage");
-            PluginResult dataResult = new PluginResult(PluginResult.Status.OK);
-            // 非常重要
-            dataResult.setKeepCallback(true);
-            mCallbackContext.sendPluginResult(dataResult);
+    public static void renewConversationList() {
+        if (null != mWebView) {
+            LogUtils.d("ZJNSHXPlugin", "renewConversationList");
+            mWebView.loadUrl("javascript:renewConversationList()");
         }
     }
 

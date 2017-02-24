@@ -125,7 +125,9 @@ public class ChatActivity extends EaseBaseActivity {
 
     private void updateView() {
         updateProductView();
-        updateCustomerService();
+        if (null != extModel && MessageExtModel.MESSAGE_SCENE_CUSTOMER_SERVICE == extModel.message_scene) {
+            updateCustomerService();
+        }
     }
 
     private void updateCustomerService() {
@@ -138,29 +140,27 @@ public class ChatActivity extends EaseBaseActivity {
     }
 
     private void sendCSWelcomeMessage() {
-        if (null != extModel && MessageExtModel.MESSAGE_SCENE_CUSTOMER_SERVICE == extModel.message_scene) {
-            MessageExtModel model = new MessageExtModel();
-            model.is_extend_message_content = false;
-            model.message_scene = extModel.message_scene;
-            model.user = extModel.touser;
-            model.touser = extModel.user;
+        MessageExtModel model = new MessageExtModel();
+        model.is_extend_message_content = false;
+        model.message_scene = extModel.message_scene;
+        model.user = extModel.touser;
+        model.touser = extModel.user;
 
-            if (null != model.touser) {
-                EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-                message.setChatType(EMMessage.ChatType.Chat);
-                message.setFrom(model.user.easemobile_id);
-                message.setTo(model.touser.easemobile_id);
-                message.setMsgId(UUID.randomUUID().toString());
-                message.addBody(new EMTextMessageBody(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName()))));
-                message.setStatus(EMMessage.Status.SUCCESS);
-                String extContent = GsonUtils.toJson(model);
-                message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
-                List<EMMessage> msgs = new ArrayList<EMMessage>();
-                msgs.add(message);
-                EMClient.getInstance().chatManager().importMessages(msgs);
-                // 保存同意消息
-                EMClient.getInstance().chatManager().saveMessage(message);
-            }
+        if (null != model.touser) {
+            EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+            message.setChatType(EMMessage.ChatType.Chat);
+            message.setFrom(model.user.easemobile_id);
+            message.setTo(model.touser.easemobile_id);
+            message.setMsgId(UUID.randomUUID().toString());
+            message.addBody(new EMTextMessageBody(getResources().getString(getResources().getIdentifier("str_customer_service_welcome_message", "string", getPackageName()))));
+            message.setStatus(EMMessage.Status.SUCCESS);
+            String extContent = GsonUtils.toJson(model);
+            message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
+            List<EMMessage> msgs = new ArrayList<EMMessage>();
+            msgs.add(message);
+            EMClient.getInstance().chatManager().importMessages(msgs);
+            // 保存同意消息
+            EMClient.getInstance().chatManager().saveMessage(message);
         }
     }
 
