@@ -464,7 +464,7 @@ public class HXManager {
 
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
-                ZJNSHXPlugin.updateSubscribersMessage();
+                ZJNSHXPlugin.renewConversationList();
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     //应用在后台，不需要刷新UI,通知栏提示新消息
