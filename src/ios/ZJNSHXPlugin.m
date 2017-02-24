@@ -6,20 +6,20 @@
 //
 //
 
-#import "ZJNSEaseMobileManager.h"
+#import "ZJNSHXPlugin.h"
 #import "EMClient.h"
 #import "ZJNSEaseMobileConversationModel.h"
-@implementation ZJNSEaseMobileManager
+@implementation ZJNSHXPlugin
 + (void)load{
-    [ZJNSEaseMobileManager sharedInstance];
+    [ZJNSHXPlugin sharedInstance];
 }
 
-static ZJNSEaseMobileManager *_sharedInstance;
+static ZJNSHXPlugin *_sharedInstance;
 
-+ (ZJNSEaseMobileManager *)sharedInstance {
++ (ZJNSHXPlugin *)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [ZJNSEaseMobileManager new];
+        _sharedInstance = [ZJNSHXPlugin new];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToDesignerDetial:) name:kGoToDesignerDetialNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToUserDetail:) name:kGoToUserDetailNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToProductDetail:) name:kGoToProductDetailNotification object:nil];
@@ -32,7 +32,7 @@ static ZJNSEaseMobileManager *_sharedInstance;
 
 #pragma mark - JS -> Native
 -(void)login:(CDVInvokedUrlCommand *)command{
-    [ZJNSEaseMobileManager sharedInstance].commandDelegate = self.commandDelegate;
+    [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     if (command.arguments.count>1) {
         //customize argument
         
@@ -124,7 +124,7 @@ static ZJNSEaseMobileManager *_sharedInstance;
 }
 
 - (void)logout:(CDVInvokedUrlCommand *)command{
-    [ZJNSEaseMobileManager sharedInstance].commandDelegate = self.commandDelegate;
+    [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     __weak __typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         EMError *error = [[EMClient sharedClient] logout:YES];
@@ -151,7 +151,7 @@ static ZJNSEaseMobileManager *_sharedInstance;
 }
 
 -(void)getAllConversations:(CDVInvokedUrlCommand *)command{
-    [ZJNSEaseMobileManager sharedInstance].commandDelegate = self.commandDelegate;
+    [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     __weak __typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __strong __typeof(weakSelf)strongSlef = weakSelf;
@@ -176,7 +176,7 @@ static ZJNSEaseMobileManager *_sharedInstance;
 }
 
 -(void)gotoChat:(CDVInvokedUrlCommand *)command{
-    [ZJNSEaseMobileManager sharedInstance].commandDelegate = self.commandDelegate;
+    [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     if (command.arguments.count >0) {
         NSString *ext       = command.arguments[0];
         NSDictionary *dic   = [ChatUIHelper jsonStringToDictionary:ext];
@@ -210,7 +210,7 @@ static ZJNSEaseMobileManager *_sharedInstance;
 }
 
 -(void)delConversationItem:(CDVInvokedUrlCommand *)command{
-    [ZJNSEaseMobileManager sharedInstance].commandDelegate = self.commandDelegate;
+    [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     if (command.arguments.count > 0) {
         NSString *conversationId = command.arguments[0];
         __weak __typeof(self)weakSelf = self;

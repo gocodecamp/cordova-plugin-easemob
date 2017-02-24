@@ -8,10 +8,9 @@
 
 #import <Cordova/CDVPlugin.h>
 
-@interface ZJNSEaseMobileManager : CDVPlugin
+@interface ZJNSHXPlugin : CDVPlugin
 @property (nonatomic, strong)UIViewController *cordovaViewController;
-@property (nonatomic, strong)UIWebView *webView;
-+ (ZJNSEaseMobileManager *)sharedInstance;
++ (ZJNSHXPlugin *)sharedInstance;
 -(void)login:(CDVInvokedUrlCommand *)command;
 -(void)logout:(CDVInvokedUrlCommand *)command;
 -(void)getAllConversations:(CDVInvokedUrlCommand *)command;
