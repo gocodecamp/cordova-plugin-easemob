@@ -180,7 +180,7 @@ static ZJNSHXPlugin *_sharedInstance;
     if (command.arguments.count >0) {
         NSString *ext       = command.arguments[0];
         NSDictionary *dic   = [ChatUIHelper jsonStringToDictionary:ext];
-        dic = dic[@"ext"];
+//        dic = dic[@"ext"];
         [ZJUserModel sharedInstance].userId         = dic[@"user"][@"easemobile_id"];
         [ZJUserModel sharedInstance].easemobile_id  = dic[@"user"][@"easemobile_id"];
         [ZJUserModel sharedInstance].userName   = dic[@"user"][@"username"];
@@ -188,7 +188,7 @@ static ZJNSHXPlugin *_sharedInstance;
         [ZJUserModel sharedInstance].nickName   = dic[@"user"][@"nickname"];
         
         
-        ChatViewController *chatVC = [[ChatViewController alloc] initWithChatter:dic[@"user"][@"easemobile_id"] ext:dic];
+        ChatViewController *chatVC = [[ChatViewController alloc] initWithChatter:dic[@"touser"][@"easemobile_id"] ext:dic];
         
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:chatVC];
         [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:nav animated:YES completion:^{
