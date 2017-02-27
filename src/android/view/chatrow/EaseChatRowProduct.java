@@ -88,7 +88,8 @@ public class EaseChatRowProduct extends EaseChatRow {
     }
 
     private void sendProductMessage(MessageExtModel model) {
-        model.is_extend_message_content = false;
+        model.is_extend_message_content = true;
+        model.message_type = MessageExtModel.EXT_TYPE_SINGLE_PRODUCT_LINK;
         MessageData messageData = model.data;
         if (null != model && null != model.touser && null != messageData) {
             EMMessage message = EMMessage.createTxtSendMessage(messageData.url, model.touser.easemobile_id);

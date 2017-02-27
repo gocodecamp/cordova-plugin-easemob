@@ -209,9 +209,15 @@
             target-dir="src/com/bjzjns/hxplugin/view" />
         <source-file src="src/android/view/chatrow/EaseChatRowProduct.java"
             target-dir="src/com/bjzjns/hxplugin/view/chatrow" />
+        <source-file src="src/android/view/chatrow/EaseChatRowProductLink.java"
+            target-dir="src/com/bjzjns/hxplugin/view/chatrow" />
         <source-file src="src/android/res/values/bjzjns_strings.xml" target-dir="res/values" />
         <source-file src="src/android/res/values/bjzjns_colors.xml" target-dir="res/values" />
         <source-file src="src/android/res/layout/ease_row_sent_product.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/ease_row_received_product_link.xml"
+            target-dir="res/layout" />
+        <source-file src="src/android/res/layout/ease_row_sent_product_link.xml"
             target-dir="res/layout" />
         <source-file src="src/android/res/layout/toolbar_include_layout.xml"
             target-dir="res/layout" />
