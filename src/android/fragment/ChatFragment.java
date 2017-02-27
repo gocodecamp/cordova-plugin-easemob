@@ -250,7 +250,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                 && EMMessage.Type.TXT == message.getType()) {
             EMTextMessageBody textMessageBody = (EMTextMessageBody) message.getBody();
             String messageContent = textMessageBody.getMessage();
-            Pattern p = Pattern.compile("^http://ssj.*$");
+            Pattern p = Pattern.compile("^http://ssj-sj.latatu.(net|cn)/SSJAdmin/index.html#create-newgoods?.*$");
             Matcher m = p.matcher(messageContent);
             if (m.matches()) {
                 String productId = "";
