@@ -61,7 +61,6 @@ public class ZJNSHXPlugin extends CordovaPlugin {
             } catch (Exception e) {
                 callbackContext.error("initEaseMobile error:" + e.toString());
             }
-
             return true;
         } else if (action.equals(LOGIN_HX)) {
             loginHX(args.getString(0), args.getString(1), callbackContext);

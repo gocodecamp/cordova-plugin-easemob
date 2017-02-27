@@ -22,6 +22,7 @@ import com.bjzjns.hxplugin.activity.ImageGridActivity;
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.view.chatrow.EaseChatRowProduct;
+import com.bjzjns.hxplugin.view.chatrow.EaseChatRowProductLink;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
@@ -35,8 +36,6 @@ import com.hyphenate.util.PathUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper {
 
@@ -45,6 +44,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     private static final int ITEM_FILE = 12;
     private static final int MESSAGE_TYPE_SENT_PRODUCT = 1;
     private static final int MESSAGE_TYPE_RECV_PRODUCT = 2;
+    private static final int MESSAGE_TYPE_SENT_PRODUCT_LINK = 3;
+    private static final int MESSAGE_TYPE_RECV_PRODUCT_LINK = 4;
     private static final int REQUEST_CODE_SELECT_VIDEO = 11;
     private static final int REQUEST_CODE_SELECT_FILE = 12;
     private static final int REQUEST_CODE_GROUP_DETAIL = 13;
@@ -244,21 +245,6 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public boolean onMessageBubbleClick(EMMessage message) {
         //消息框点击事件，demo这里不做覆盖，如需覆盖，return true
-        String extContent = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXT, "");
-        MessageExtModel model = GsonUtils.fromJson(extContent, MessageExtModel.class);
-        if (null != model && MessageExtModel.MESSAGE_SCENE_DESIGNER == model.message_scene
-                && EMMessage.Type.TXT == message.getType()) {
-            EMTextMessageBody textMessageBody = (EMTextMessageBody) message.getBody();
-            String messageContent = textMessageBody.getMessage();
-            Pattern p = Pattern.compile("^http://ssj.*$");
-            Matcher m = p.matcher(messageContent);
-            if (m.matches()) {
-                String productId = "";
-                ZJNSHXPlugin.gotoProductDetail(productId);
-                getActivity().finish();
-                return true;
-            }
-        }
         return false;
     }
 
@@ -328,6 +314,9 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equalsIgnoreCase(messageExtModel.message_type)) {
                         // 商品类型
                         return message.direct() == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PRODUCT : MESSAGE_TYPE_SENT_PRODUCT;
+                    } else if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT_LINK.equalsIgnoreCase(messageExtModel.message_type)) {
+                        // 商品链接类型
+                        return message.direct() == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PRODUCT_LINK : MESSAGE_TYPE_SENT_PRODUCT_LINK;
                     }
                 }
             }
@@ -344,6 +333,9 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT.equalsIgnoreCase(messageExtModel.message_type)) {
                         // 商品类型
                         return new EaseChatRowProduct(getActivity(), message, position, adapter);
+                    } else if (MessageExtModel.EXT_TYPE_SINGLE_PRODUCT_LINK.equalsIgnoreCase(messageExtModel.message_type)) {
+                        // 商品链接类型
+                        return new EaseChatRowProductLink(getActivity(), message, position, adapter);
                     }
                 }
             }
