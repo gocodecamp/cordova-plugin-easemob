@@ -90,7 +90,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     private void initHX() {
         LogUtils.d("ZJNSHXPlugin", "initHX");
-        this.cordova.getThreadPool().execute(new Runnable() {
+        this.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 HXManager.getInstance().init(cordova.getActivity().getApplicationContext());
