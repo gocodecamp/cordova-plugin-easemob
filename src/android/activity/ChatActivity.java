@@ -15,6 +15,7 @@ import com.bjzjns.hxplugin.fragment.ChatFragment;
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.permissions.PermissionsManager;
 import com.bjzjns.hxplugin.tools.GsonUtils;
+import com.bjzjns.hxplugin.tools.ToastUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -90,7 +91,13 @@ public class ChatActivity extends EaseBaseActivity {
                 rightTv.setVisibility(View.GONE);
             }
         }
-
+        if (null != extModel) {
+            if (null == extModel.user || TextUtils.isEmpty(extModel.user.easemobile_id)) {
+                ToastUtils.showShort(this, getResources().getIdentifier("str_login_prompt", "string", getPackageName()));
+            }
+        } else {
+            ToastUtils.showShort(this, getResources().getIdentifier("str_send_ext_error", "string", getPackageName()));
+        }
         //可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
         //传入参数
