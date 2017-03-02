@@ -11,6 +11,7 @@
 @interface ZJNSHXPlugin : CDVPlugin
 @property (nonatomic, strong)UIViewController *cordovaViewController;
 + (ZJNSHXPlugin *)sharedInstance;
+-(void)initEaseMobile:(CDVInvokedUrlCommand *)command;
 -(void)login:(CDVInvokedUrlCommand *)command;
 -(void)logout:(CDVInvokedUrlCommand *)command;
 -(void)getAllConversations:(CDVInvokedUrlCommand *)command;
