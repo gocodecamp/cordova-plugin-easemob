@@ -240,12 +240,7 @@ public class HXManager {
                 if (PackageUtils.isAppOnForeground(mContext)) {
                     intent = getIMMessageIntent(message);
                 } else {
-                    if (isLoggedIn()) {
-                        // todo 进入登录界面
-                        ToastUtils.showShort(mContext, "请登录！");
-                    } else {
-                        intent = HXManager.getInstance().getIMMessageIntent(message);
-                    }
+                    intent = HXManager.getInstance().getIMMessageIntent(message);
                 }
                 return intent;
             }
@@ -464,7 +459,6 @@ public class HXManager {
 
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
-                ZJNSHXPlugin.renewConversationList();
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     //应用在后台，不需要刷新UI,通知栏提示新消息
@@ -472,6 +466,7 @@ public class HXManager {
                         getNotifier().onNewMsg(message);
                     }
                 }
+                ZJNSHXPlugin.renewConversationList();
             }
 
             @Override
@@ -551,6 +546,7 @@ public class HXManager {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "logout: onSuccess");
+                HXPreferenceManager.getInstance().setUserInfo("");
                 if (callback != null) {
                     callback.onSuccess();
                 }
@@ -707,7 +703,6 @@ public class HXManager {
         }
 
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EaseConstant.EXTRA_EXT_MODEL, sendVal);
         intent.putExtra(EaseConstant.EXTRA_HXMETADATA, hxMetaData);
         intent.putExtra(EaseConstant.EXTRA_CURRENTUSERID, currentUserId);
