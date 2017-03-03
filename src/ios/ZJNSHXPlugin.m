@@ -31,23 +31,16 @@ static ZJNSHXPlugin *_sharedInstance;
 
 
 #pragma mark - JS -> Native
+
+-(void)initEaseMobile:(CDVInvokedUrlCommand *)command{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self resultStringWithMessage:@"success" success:YES]];
+    [self.commandDelegate runInBackground:^{
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
 -(void)login:(CDVInvokedUrlCommand *)command{
     [ZJNSHXPlugin sharedInstance].commandDelegate = self.commandDelegate;
     if (command.arguments.count>1) {
-        //customize argument
-        
-        // 1.将网址初始化成一个OC字符串对象
-        NSString *urlStr = @"http://www.cocoachina.com/cms/uploads/allimg/140919/4673_140919134550_1.jpg";
-        // 如果网址中存在中文,进行URLEncode
-        NSString *newUrlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        // 2.构建网络URL对象, NSURL
-        NSURL *url = [NSURL URLWithString:newUrlStr];
-        // 3.创建网络请求
-        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
-        // 创建同步链接
-        NSURLResponse *response = nil;
-        NSError *error = nil;
-        NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
         
         NSString* username = command.arguments[0];
         NSString *password = command.arguments[1];
@@ -106,7 +99,7 @@ static ZJNSHXPlugin *_sharedInstance;
                             
                     }
                     NSString *result = [self resultStringWithMessage:errorStr success:NO];
-                    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+                    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:result];
                     [weakself.commandDelegate runInBackground:^{
                         [weakself.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                     }];
@@ -140,8 +133,8 @@ static ZJNSHXPlugin *_sharedInstance;
             else{
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:@NO];
-                NSString *result = [self resultStringWithMessage:@"success" success:YES];
-                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+                NSString *result = [self resultStringWithMessage:@"error" success:YES];
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:result];
                 [weakSelf.commandDelegate runInBackground:^{
                     [weakSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                 }];
@@ -219,14 +212,20 @@ static ZJNSHXPlugin *_sharedInstance;
             NSString *result;
             if (aError != nil) {
                 result = [strongSelf resultStringWithMessage:aError.description success:NO];
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:result];
+                [strongSelf.commandDelegate runInBackground:^{
+                    [strongSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }];
+                
             }else{
                 result = [strongSelf resultStringWithMessage:@"success" success:YES];
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+                [strongSelf.commandDelegate runInBackground:^{
+                    [strongSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }];
             }
             
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
-            [strongSelf.commandDelegate runInBackground:^{
-                [strongSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-            }];
+            
             
         }];
     }else{
