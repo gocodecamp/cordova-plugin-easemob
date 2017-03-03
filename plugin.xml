@@ -6,6 +6,7 @@
         <clobbers target="EasemobPlugin" />
     </js-module>
     <preference name="EASEMOB_KEY" />
+    <preference name="PACKAGE_NAME" />
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="ZJNSHXPlugin">
@@ -152,6 +153,12 @@
             <activity android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
                 android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
+            <provider android:name="android.support.v4.content.FileProvider"
+                android:authorities="$PACKAGE_NAME.fileprovider"
+                android:exported="false" android:grantUriPermissions="true">
+                <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/filepaths" />
+            </provider>
         </config-file>
         <source-file src="src/android/activity/ChatActivity.java"
             target-dir="src/com/bjzjns/hxplugin/activity" />
@@ -206,6 +213,7 @@
             target-dir="src/com/bjzjns/hxplugin/view/chatrow" />
         <source-file src="src/android/res/values/bjzjns_strings.xml" target-dir="res/values" />
         <source-file src="src/android/res/values/bjzjns_colors.xml" target-dir="res/values" />
+        <source-file src="src/android/res/xml/filepaths.xml" target-dir="res/xml" />
         <source-file src="src/android/res/layout/ease_row_sent_product.xml"
             target-dir="res/layout" />
         <source-file src="src/android/res/layout/ease_row_received_product_link.xml"

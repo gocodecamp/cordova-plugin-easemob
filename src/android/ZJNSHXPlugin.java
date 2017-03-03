@@ -14,6 +14,7 @@ import org.json.JSONException;
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.model.ConversationItemModel;
 import com.bjzjns.hxplugin.model.ConversationListModel;
+import com.bjzjns.hxplugin.model.HXUserModel;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.tools.LogUtils;
 import com.hyphenate.EMCallBack;
@@ -34,9 +35,9 @@ public class ZJNSHXPlugin extends CordovaPlugin {
     // 初始化环信
     private static final String INIT_HX = "initEaseMobile";
     // 登录环信
-    private static final String LOGIN_HX = "login";
+    private static final String LOGIN = "login";
     // 退出环信
-    private static final String LOGOUT_HX = "logout";
+    private static final String LOGOUT = "logout";
     // 获取所有会话
     private static final String LOAD_ALL_CONVERSATION = "getAllConversations";
     // 删除会话
@@ -62,10 +63,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                 callbackContext.error("initEaseMobile error:" + e.toString());
             }
             return true;
-        } else if (action.equals(LOGIN_HX)) {
-            loginHX(args.getString(0), args.getString(1), callbackContext);
+        } else if (action.equals(LOGIN)) {
+            login(args.getString(0), args.getString(1), callbackContext);
             return true;
-        } else if (action.equals(LOGOUT_HX)) {
+        } else if (action.equals(LOGOUT)) {
             logout(true, callbackContext);
             return true;
         } else if (action.equals(LOAD_ALL_CONVERSATION)) {
@@ -119,9 +120,12 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param userName
      * @param password
      */
-    private void loginHX(String userName, String password, final CallbackContext callbackContext) {
-        LogUtils.d("ZJNSHXPlugin", "loginHX");
-        HXManager.getInstance().loginHX(userName, password, new EMCallBack() {
+    private void login(String userName, String password, final CallbackContext callbackContext) {
+        LogUtils.d("ZJNSHXPlugin", "login");
+        HXUserModel userModel = new HXUserModel();
+        userModel.userHXId = userName;
+        userModel.password = password;
+        HXManager.getInstance().loginHX(userModel, new EMCallBack() {
             @Override
             public void onSuccess() {
                 LogUtils.d("ZJNSHXPlugin", "login success");

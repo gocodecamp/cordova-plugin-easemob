@@ -579,13 +579,10 @@ public class HXManager {
         return easeUI.getNotifier();
     }
 
-    public void loginHX(final String userName, final String password, final EMCallBack callBack) {
-        EMClient.getInstance().login(userName, password, new EMCallBack() {
+    public void loginHX(final HXUserModel userModel, final EMCallBack callBack) {
+        EMClient.getInstance().login(userModel.userHXId, userModel.password, new EMCallBack() {
             @Override
             public void onSuccess() {
-                HXUserModel userModel = new HXUserModel();
-                userModel.userHXId = userName;
-                userModel.password = password;
                 HXPreferenceManager.getInstance().setUserInfo(GsonUtils.toJson(userModel));
                 callBack.onSuccess();
             }

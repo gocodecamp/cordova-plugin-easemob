@@ -52,7 +52,7 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
     private ImageResizer mImageResizer;
     List<VideoEntityModel> mList;
     private static final int REQUEST_CODE_VIDEO = 100;
-    private static final String[] PERMISSIONS_VIDEO = new String[]{Manifest.permission.CAMERA};
+    private static final String[] PERMISSIONS_VIDEO = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
 
     /**
      * Empty constructor as per the Fragment documentation
@@ -169,7 +169,8 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
         mImageResizer.setPauseWork(true);
 
         if (position == 0) {
-            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                    || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO)) {
                 requestPermissions(PERMISSIONS_VIDEO, REQUEST_CODE_VIDEO);
             } else {
                 Intent intent = new Intent();

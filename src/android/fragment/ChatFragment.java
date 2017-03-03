@@ -301,9 +301,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                 break;
             case REQUEST_CODE_TAKE_PICTURE:
                 if (hasAllPermissionsGranted(grantResults)) {
-                    startActivityForResult(
-                            new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
-                            REQUEST_CODE_CAMERA);
+                    selectPicFromCamera();
                 }
                 break;
             case REQUEST_CODE_SELECT_PICTURE:
