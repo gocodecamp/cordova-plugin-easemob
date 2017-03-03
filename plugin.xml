@@ -26,7 +26,6 @@
             <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
             <uses-permission android:name="android.permission.WAKE_LOCK" />
             <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
             <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
             <uses-permission android:name="android.permission.USE_CREDENTIALS" />
             <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -181,12 +180,6 @@
             target-dir="src/com/bjzjns/hxplugin/model" />
         <source-file src="src/android/model/VideoEntityModel.java"
             target-dir="src/com/bjzjns/hxplugin/model" />
-        <source-file src="src/android/permissions/Permissions.java"
-            target-dir="src/com/bjzjns/hxplugin/permissions" />
-        <source-file src="src/android/permissions/PermissionsManager.java"
-            target-dir="src/com/bjzjns/hxplugin/permissions" />
-        <source-file src="src/android/permissions/PermissionsResultAction.java"
-            target-dir="src/com/bjzjns/hxplugin/permissions" />
         <source-file src="src/android/tools/GsonUtils.java"
             target-dir="src/com/bjzjns/hxplugin/tools" />
         <source-file src="src/android/tools/LogUtils.java"

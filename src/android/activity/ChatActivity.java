@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.bjzjns.hxplugin.ZJNSHXPlugin;
 import com.bjzjns.hxplugin.fragment.ChatFragment;
 import com.bjzjns.hxplugin.manager.HXManager;
-import com.bjzjns.hxplugin.permissions.PermissionsManager;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.tools.ToastUtils;
 import com.hyphenate.chat.EMClient;
@@ -200,11 +198,5 @@ public class ChatActivity extends EaseBaseActivity {
         super.onResume();
         // cancel the notification
         EaseUI.getInstance().getNotifier().reset();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }

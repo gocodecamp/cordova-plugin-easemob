@@ -1,16 +1,20 @@
 package com.bjzjns.hxplugin.fragment;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +51,8 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
     private ImageAdapter mAdapter;
     private ImageResizer mImageResizer;
     List<VideoEntityModel> mList;
+    private static final int REQUEST_CODE_VIDEO = 100;
+    private static final String[] PERMISSIONS_VIDEO = new String[]{Manifest.permission.CAMERA};
 
     /**
      * Empty constructor as per the Fragment documentation
@@ -163,10 +169,13 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
         mImageResizer.setPauseWork(true);
 
         if (position == 0) {
-
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), RecorderVideoActivity.class);
-            startActivityForResult(intent, 100);
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)) {
+                requestPermissions(PERMISSIONS_VIDEO, REQUEST_CODE_VIDEO);
+            } else {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), RecorderVideoActivity.class);
+                startActivityForResult(intent, 100);
+            }
         } else {
             VideoEntityModel vEntty = mList.get(position - 1);
             // limit the size to 10M
@@ -179,6 +188,31 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_VIDEO:
+                if (hasAllPermissionsGranted(grantResults)) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), RecorderVideoActivity.class);
+                    startActivityForResult(intent, 100);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private class ImageAdapter extends BaseAdapter {

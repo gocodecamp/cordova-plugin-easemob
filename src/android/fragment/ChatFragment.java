@@ -1,14 +1,19 @@
 package com.bjzjns.hxplugin.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +56,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     private static final int REQUEST_CODE_GROUP_DETAIL = 13;
     private static final int REQUEST_CODE_CONTEXT_MENU = 14;
     private static final int REQUEST_CODE_SELECT_AT_USER = 15;
+    private static final int REQUEST_CODE_VIDEO = 103;
+    private static final String[] PERMISSIONS_VIDEO = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     /**
      * if it is chatBot
@@ -264,8 +271,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     public boolean onExtendMenuItemClick(int itemId, View view) {
         switch (itemId) {
             case ITEM_VIDEO:
-                Intent intent = new Intent(getActivity(), ImageGridActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    requestPermissions(PERMISSIONS_VIDEO, REQUEST_CODE_VIDEO);
+                } else {
+                    Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                }
                 break;
             case ITEM_FILE: //file
                 selectFileFromLocal();
@@ -275,6 +287,44 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         }
         //keep exist extend menu
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_VIDEO:
+                if (hasAllPermissionsGranted(grantResults)) {
+                    Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                }
+                break;
+            case REQUEST_CODE_TAKE_PICTURE:
+                if (hasAllPermissionsGranted(grantResults)) {
+                    startActivityForResult(
+                            new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
+                            REQUEST_CODE_CAMERA);
+                }
+                break;
+            case REQUEST_CODE_SELECT_PICTURE:
+                if (hasAllPermissionsGranted(grantResults)) {
+                    selectPicFromLocal();
+                }
+                break;
+            case REQUEST_CODE_AUDIO:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
