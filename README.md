@@ -35,7 +35,7 @@ cordova plugin add https://github.com/gocodecamp/cordova-plugin-easemob --variab
 `getAllConversations(successCallback, failCallback)`
 
 
-Success function returns an Object like:
+Success function returns an Object list, Object like:
 
     {
         "conversationId":"323422"，
