@@ -1,0 +1,23 @@
+{
+  "name": "cordova-plugin-easemob",
+  "version": "1.0.0",
+  "description": "Integrated easemobile plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "ionic plugin add https://github.com/gocodecamp/cordova-plugin-easemob --variable EASEMOB_KEY=your easemobile key --variable PACKAGE_NAME=your packagename"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gocodecamp/cordova-plugin-easemob.git"
+  },
+  "keywords": [
+    "easemob",
+    "chat"
+  ],
+  "author": "gocodecamp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gocodecamp/cordova-plugin-easemob/issues"
+  },
+  "homepage": "https://github.com/gocodecamp/cordova-plugin-easemob#readme"
+}
