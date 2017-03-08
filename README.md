@@ -5,7 +5,7 @@
 ### Installation ###
 
 ```
-cordova plugin add https://github.com/gocodecamp/cordova-plugin-easemob --variable EASEMOB_KEY=your easemobile key --variable PACKAGE_NAME=your packagename
+cordova plugin add https://github.com/gocodecamp/cordova-plugin-easemob --variable EASEMOB_KEY=your easemobile key
 ```
 
 ### Plugin API ###

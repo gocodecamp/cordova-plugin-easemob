@@ -6,7 +6,6 @@
         <clobbers target="EasemobPlugin" />
     </js-module>
     <preference name="EASEMOB_KEY" />
-    <preference name="PACKAGE_NAME" />
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="ZJNSHXPlugin">
