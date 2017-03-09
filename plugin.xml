@@ -6,6 +6,7 @@
         <clobbers target="EasemobPlugin" />
     </js-module>
     <preference name="EASEMOB_KEY" />
+    <preference name="APP_PACKAGE" />
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="ZJNSHXPlugin">
@@ -153,7 +154,7 @@
                 android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
             <provider android:name="android.support.v4.content.FileProvider"
-                android:authorities="$PACKAGE_NAME.fileprovider"
+                android:authorities="$APP_PACKAGE.fileprovider"
                 android:exported="false" android:grantUriPermissions="true">
                 <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/filepaths" />
