@@ -6,7 +6,6 @@
         <clobbers target="EasemobPlugin" />
     </js-module>
     <preference name="EASEMOB_KEY" />
-    <preference name="APP_PACKAGE" />
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="ZJNSHXPlugin">
@@ -153,8 +152,8 @@
             <activity android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
                 android:screenOrientation="portrait" android:theme="@style/horizontal_slide"
                 android:windowSoftInputMode="stateAlwaysHidden" />
-            <provider android:name="android.support.v4.content.FileProvider"
-                android:authorities="$APP_PACKAGE.fileprovider"
+            <provider android:name="com.hyphenate.easeui.provider.HXPluginFileProvider"
+                android:authorities="$PACKAGE_NAME.provider"
                 android:exported="false" android:grantUriPermissions="true">
                 <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/filepaths" />
