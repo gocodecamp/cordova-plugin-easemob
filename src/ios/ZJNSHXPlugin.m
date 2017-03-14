@@ -20,7 +20,7 @@ static ZJNSHXPlugin *_sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [ZJNSHXPlugin new];
-        [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToDesignerDetial:) name:kGoToDesignerDetialNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToDesignerDetail:) name:kGoToDesignerDetialNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToUserDetail:) name:kGoToUserDetailNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(goToProductDetail:) name:kGoToProductDetailNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:_sharedInstance selector:@selector(newmessageNotice:) name:kSetupUnreadMessageCount object:nil];
