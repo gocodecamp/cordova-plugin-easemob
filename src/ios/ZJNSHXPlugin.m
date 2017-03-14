@@ -32,7 +32,7 @@ static ZJNSHXPlugin *_sharedInstance;
 
 #pragma mark - JS -> Native
 
--(void)initEaseMobile:(CDVInvokedUrlCommand *)command{
+-(void)initEasemob:(CDVInvokedUrlCommand *)command{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self resultStringWithMessage:@"success" success:YES]];
     [self.commandDelegate runInBackground:^{
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -173,7 +173,7 @@ static ZJNSHXPlugin *_sharedInstance;
     if (command.arguments.count >0) {
         NSString *ext       = command.arguments[0];
         NSDictionary *dic   = [ChatUIHelper jsonStringToDictionary:ext];
-//        dic = dic[@"ext"];
+        //        dic = dic[@"ext"];
         [ZJUserModel sharedInstance].userId         = dic[@"user"][@"easemobile_id"];
         [ZJUserModel sharedInstance].easemobile_id  = dic[@"user"][@"easemobile_id"];
         [ZJUserModel sharedInstance].userName   = dic[@"user"][@"username"];
@@ -239,9 +239,9 @@ static ZJNSHXPlugin *_sharedInstance;
 }
 
 #pragma mark - Native->JS
-- (void)goToDesignerDetial:(NSNotification *)notification{
+- (void)goToDesignerDetail:(NSNotification *)notification{
     NSDictionary *ext = [notification userInfo];
-    NSString *jsStr = [NSString stringWithFormat:@"window.goToDesignerDetial(\"%@\")",ext[@"touser"][@"username"]];
+    NSString *jsStr = [NSString stringWithFormat:@"window.goToDesignerDetail(\"%@\")",ext[@"touser"][@"username"]];
     [self.commandDelegate evalJs:jsStr];
 }
 
