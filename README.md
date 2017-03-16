@@ -44,7 +44,7 @@ Success function returns an Object list, Object like:
         "messageBodyContent":"hello！"，
         "messageBodyType":"2"，（1：TXT 2：IMAGE 3：VIDEO 4：LOCATION 5：VOICE 6：FILE 7：CMD）
         "ext":"{
-                   "message_scene": "0"，
+                   "message_scene": 0，
                    "is_extend_message_content": true，
                    "message_type": "single_product"，
                    "brand_name": "shop name"，
@@ -90,7 +90,7 @@ Failure function returns an error String.
 params options is Object like：
 
 	{
-    	"message_scene": "0"，
+    	"message_scene": 100，
         "is_extend_message_content": true，
         "message_type": "single_product"，
         "brand_name": "shop name"，
