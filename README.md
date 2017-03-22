@@ -35,15 +35,16 @@ cordova plugin add https://github.com/gocodecamp/cordova-plugin-easemob --variab
 `getAllConversations(successCallback, failCallback)`
 
 
-Success function returns an Object list, Object like:
+Success function returns an Object, Object like:
 
-    {
-        "conversationId":"323422"，
-        "timestamp":"32324566554545"，
-	    "unreadMessagesCount":"2"，
-        "messageBodyContent":"hello！"，
-        "messageBodyType":"2"，（1：TXT 2：IMAGE 3：VIDEO 4：LOCATION 5：VOICE 6：FILE 7：CMD）
-        "ext":"{
+	{"conversationList":"[
+		 {
+        	"conversationId":"323422"，
+        	"timestamp":"32324566554545"，
+	    	"unreadMessagesCount":"2"，
+        	"messageBodyContent":"hello！"，
+        	"messageBodyType":"2"，（1：TXT 2：IMAGE 3：VIDEO 4：LOCATION 5：VOICE 6：FILE 7：CMD）
+        	"ext":"{
                    "message_scene": 0，
                    "is_extend_message_content": true，
                    "message_type": "single_product"，
@@ -71,7 +72,9 @@ Success function returns an Object list, Object like:
                    				"notSupportDisplayText": "can’t Parsing this message"，
 							}"
                }"
-}
+		}
+	]"
+	}
 
 Failure function returns an error String.
 
