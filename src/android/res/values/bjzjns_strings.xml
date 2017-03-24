@@ -4,4 +4,7 @@
     <string name="str_look_designer">查看设计师</string>
     <string name="str_send_product_link">发送作品链接</string>
     <string name="str_customer_service_welcome_message">欢迎咨询舍舍迦客服，请问有什么可以帮助您？</string>
+    <string name="str_login_prompt">请先登录账户！</string>
+    <string name="str_send_ext_error">聊天ext传递错误！</string>
+    <string name="str_send_param_error">传递的参数错误！</string>
 </resources>

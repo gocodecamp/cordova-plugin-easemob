@@ -3,20 +3,13 @@ package com.bjzjns.hxplugin;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.PluginResult;
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.model.ConversationItemModel;
 import com.bjzjns.hxplugin.model.ConversationListModel;
 import com.bjzjns.hxplugin.model.HXUserModel;
 import com.bjzjns.hxplugin.tools.GsonUtils;
 import com.bjzjns.hxplugin.tools.LogUtils;
+import com.bjzjns.hxplugin.tools.ToastUtils;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -24,6 +17,13 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.model.MessageExtModel;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +105,11 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param sendVal
      */
     private void gotoChat(final String sendVal) {
+        MessageExtModel extModel = GsonUtils.fromJson(sendVal, MessageExtModel.class);
+        if (null == extModel || null == extModel.touser
+                || TextUtils.isEmpty(extModel.touser.easemobile_id)) {
+            ToastUtils.showShort(getContext(), getContext().getResources().getIdentifier("str_send_param_error", "string", getContext().getPackageName()));
+        }
         LogUtils.d("ZJNSHXPlugin", "gotoChat");
         this.cordova.getThreadPool().execute(new Runnable() {
             @Override
