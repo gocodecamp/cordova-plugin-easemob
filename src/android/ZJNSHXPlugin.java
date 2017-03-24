@@ -105,12 +105,18 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param sendVal
      */
     private void gotoChat(final String sendVal) {
+        LogUtils.d("ZJNSHXPlugin", "gotoChat sendVal =" + sendVal);
         MessageExtModel extModel = GsonUtils.fromJson(sendVal, MessageExtModel.class);
         if (null == extModel || null == extModel.touser
                 || TextUtils.isEmpty(extModel.touser.easemobile_id)) {
-            ToastUtils.showShort(getContext(), getContext().getResources().getIdentifier("str_send_param_error", "string", getContext().getPackageName()));
+            ToastUtils.showShort(getContext(), getContext().getResources().getIdentifier("str_send_ext_error", "string", getContext().getPackageName()));
+            return;
         }
-        LogUtils.d("ZJNSHXPlugin", "gotoChat");
+
+        if (null == extModel.user || TextUtils.isEmpty(extModel.user.easemobile_id)) {
+            ToastUtils.showShort(getContext(), getContext().getResources().getIdentifier("str_login_prompt", "string", getContext().getPackageName()));
+            return;
+        }
         this.cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {

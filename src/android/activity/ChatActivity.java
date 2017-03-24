@@ -89,13 +89,6 @@ public class ChatActivity extends EaseBaseActivity {
                 rightTv.setVisibility(View.GONE);
             }
         }
-        if (null != extModel) {
-            if (null == extModel.user || TextUtils.isEmpty(extModel.user.easemobile_id)) {
-                ToastUtils.showShort(this, getResources().getIdentifier("str_login_prompt", "string", getPackageName()));
-            }
-        } else {
-            ToastUtils.showShort(this, getResources().getIdentifier("str_send_ext_error", "string", getPackageName()));
-        }
         //可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
         //传入参数
