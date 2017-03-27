@@ -387,7 +387,6 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
                     cursor.close();
                     cursor = null;
                 }
-
                 getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", filePath).putExtra("dur", duration));
                 getActivity().finish();
 

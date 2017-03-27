@@ -16,6 +16,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -44,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bjzjns.hxplugin.manager.HXManager;
 import com.bjzjns.hxplugin.tools.video.Utils;
 import com.hyphenate.easeui.ui.EaseBaseActivity;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -353,9 +356,30 @@ public class RecorderVideoActivity extends EaseBaseActivity implements
         if (defaultVideoFrameRate != -1) {
             mediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
         }
+        String currentUserId = HXManager.getInstance().getUserHXId();
+        ApplicationInfo appInfo = null;
+        String hxMetaData = "";
+        try {
+            appInfo = this.getPackageManager()
+                    .getApplicationInfo(this.getPackageName(),
+                            PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (null != appInfo) {
+            hxMetaData = appInfo.metaData.getString("EASEMOB_APPKEY");
+        }
+        if (null == PathUtil.getInstance().getVideoPath()) {
+            PathUtil.getInstance().initDirs(hxMetaData, currentUserId, this);
+        }
+
         // set the path for video file
         localPath = PathUtil.getInstance().getVideoPath() + "/"
                 + System.currentTimeMillis() + ".mp4";
+        File file = new File(localPath);
+        if (null != file.getParentFile()) {
+            file.getParentFile().mkdirs();
+        }
         mediaRecorder.setOutputFile(localPath);
         mediaRecorder.setMaxDuration(30000);
         mediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());

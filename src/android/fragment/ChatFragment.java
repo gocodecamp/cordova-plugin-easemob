@@ -11,7 +11,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -143,7 +142,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     if (data != null) {
                         int duration = data.getIntExtra("dur", 0);
                         String videoPath = data.getStringExtra("path");
+                        if (null == PathUtil.getInstance().getImagePath()) {
+                            PathUtil.getInstance().initDirs(hxMetaData, currentUserID, getContext());
+                        }
                         File file = new File(PathUtil.getInstance().getImagePath(), "thvideo" + System.currentTimeMillis());
+                        if (null != file.getParentFile()) {
+                            file.getParentFile().mkdirs();
+                        }
                         try {
                             FileOutputStream fos = new FileOutputStream(file);
                             Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
