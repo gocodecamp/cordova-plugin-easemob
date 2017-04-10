@@ -93,7 +93,7 @@ Failure function returns an error String.
 params options is Object like：
 
 	{
-    	"message_scene": 100，
+    	  "message_scene": 100，
         "is_extend_message_content": true，
         "message_type": "single_product"，
         "brand_name": "shop name"，
