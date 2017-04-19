@@ -32,6 +32,7 @@ import java.util.List;
  * This class echoes a string called from JavaScript.
  */
 public class ZJNSHXPlugin extends CordovaPlugin {
+    private static final String TAG = "ZJNSHXPlugin";
     // 初始化环信
     private static final String INIT_HX = "initEaseMobile";
     // 登录环信
@@ -54,7 +55,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        LogUtils.d("ZJNSHXPlugin", "action =" + action + ",args =" + args.toString());
+        LogUtils.d(TAG, "action =" + action + ",args =" + args.toString());
         if (action.equals(INIT_HX)) {
             try {
                 initHX();
@@ -90,7 +91,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * 初始化环信
      */
     private void initHX() {
-        LogUtils.d("ZJNSHXPlugin", "initHX");
+        LogUtils.d(TAG, "initHX");
         this.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -105,7 +106,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param sendVal
      */
     private void gotoChat(final String sendVal) {
-        LogUtils.d("ZJNSHXPlugin", "gotoChat sendVal =" + sendVal);
+        LogUtils.d(TAG, "gotoChat sendVal =" + sendVal);
         MessageExtModel extModel = GsonUtils.fromJson(sendVal, MessageExtModel.class);
         if (null == extModel || null == extModel.touser
                 || TextUtils.isEmpty(extModel.touser.easemobile_id)) {
@@ -132,14 +133,14 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param password
      */
     private void login(String userName, String password, final CallbackContext callbackContext) {
-        LogUtils.d("ZJNSHXPlugin", "login");
+        LogUtils.d(TAG, "login");
         HXUserModel userModel = new HXUserModel();
         userModel.userHXId = userName;
         userModel.password = password;
         HXManager.getInstance().loginHX(userModel, new EMCallBack() {
             @Override
             public void onSuccess() {
-                LogUtils.d("ZJNSHXPlugin", "login success");
+                LogUtils.d(TAG, "login success");
                 callbackContext.success("login success");
                 cordova.getThreadPool().execute(new Runnable() {
                     @Override
@@ -152,7 +153,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int i, String s) {
-                LogUtils.d("ZJNSHXPlugin", "login error:" + i + ":" + s);
+                LogUtils.d(TAG, "login error:" + i + ":" + s);
                 callbackContext.error("login error:" + i + ":" + s);
             }
 
@@ -169,12 +170,12 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void logout(boolean unbindDeviceToken, final CallbackContext callbackContext) {
-        LogUtils.d("ZJNSHXPlugin", "logout");
+        LogUtils.d(TAG, "logout");
         HXManager.getInstance().logout(unbindDeviceToken, new EMCallBack() {
 
             @Override
             public void onSuccess() {
-                LogUtils.d("ZJNSHXPlugin", "logout success");
+                LogUtils.d(TAG, "logout success");
                 callbackContext.success("logout success");
             }
 
@@ -184,7 +185,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
 
             @Override
             public void onError(int code, String error) {
-                LogUtils.d("ZJNSHXPlugin", "logout error:" + code + ":" + error);
+                LogUtils.d(TAG, "logout error:" + code + ":" + error);
                 callbackContext.error("logout error:" + code + ":" + error);
             }
         });
@@ -196,7 +197,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void loadAllConversation(final CallbackContext callbackContext) {
-        LogUtils.d("ZJNSHXPlugin", "loadAllConversation");
+        LogUtils.d(TAG, "loadAllConversation");
         this.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -223,10 +224,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                         conversationItemList.add(conversationItemModel);
                     }
                     conversationListModel.conversationList = conversationItemList;
-                    LogUtils.d("ZJNSHXPlugin", "AllConversation gson data:" + GsonUtils.toJson(conversationListModel));
+                    LogUtils.d(TAG, "AllConversation gson data:" + GsonUtils.toJson(conversationListModel));
                     callbackContext.success(GsonUtils.toJson(conversationListModel));
                 } catch (Exception e) {
-                    LogUtils.d("ZJNSHXPlugin", "loadAllConversation exception:" + e.toString());
+                    LogUtils.d(TAG, "loadAllConversation exception:" + e.toString());
                     callbackContext.error("loadAllConversation exception:" + e.toString());
                 }
             }
@@ -240,7 +241,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      * @param callbackContext
      */
     private void delConversationItem(final String sendVal, final CallbackContext callbackContext) {
-        LogUtils.d("ZJNSHXPlugin", "delConversationItem");
+        LogUtils.d(TAG, "delConversationItem");
         if (!TextUtils.isEmpty(sendVal)) {
             try {
                 this.cordova.getActivity().runOnUiThread(new Runnable() {
@@ -248,17 +249,17 @@ public class ZJNSHXPlugin extends CordovaPlugin {
                     public void run() {
                         // 删除此会话
                         HXManager.getInstance().delConversation(sendVal);
-                        LogUtils.d("ZJNSHXPlugin", "delConversationItem success");
+                        LogUtils.d(TAG, "delConversationItem success");
                         callbackContext.success("delConversationItem success");
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtils.d("ZJNSHXPlugin", "delConversationItem exception:" + e.toString());
+                LogUtils.d(TAG, "delConversationItem exception:" + e.toString());
                 callbackContext.error("delConversationItem exception:" + e.toString());
             }
         } else {
-            LogUtils.d("ZJNSHXPlugin", "delConversationItem you not send data");
+            LogUtils.d(TAG, "delConversationItem you not send data");
             callbackContext.error("you not send data");
         }
     }
@@ -268,7 +269,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void renewConversationList() {
         if (null != mWebView) {
-            LogUtils.d("ZJNSHXPlugin", "renewConversationList");
+            LogUtils.d(TAG, "renewConversationList");
             mWebView.loadUrl("javascript:renewConversationList()");
         }
     }
@@ -280,7 +281,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoDesignerDeatil(String sendVal) {
         if (null != mWebView) {
-            LogUtils.d("ZJNSHXPlugin", "gotoDesignerDeatil sendVal=" + sendVal);
+            LogUtils.d(TAG, "gotoDesignerDeatil sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToDesignerDetial(" + sendVal + ")");
         }
     }
@@ -292,7 +293,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoUserDetail(String sendVal) {
         if (null != mWebView) {
-            LogUtils.d("ZJNSHXPlugin", "gotoUserDetail sendVal=" + sendVal);
+            LogUtils.d(TAG, "gotoUserDetail sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToUserDetail(" + sendVal + ")");
         }
     }
@@ -304,7 +305,7 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      */
     public static void gotoProductDetail(String sendVal) {
         if (null != mWebView) {
-            LogUtils.d("ZJNSHXPlugin", "gotoProductDetail sendVal=" + sendVal);
+            LogUtils.d(TAG, "gotoProductDetail sendVal=" + sendVal);
             mWebView.loadUrl("javascript:goToProductDetail(" + sendVal + ")");
         }
     }
