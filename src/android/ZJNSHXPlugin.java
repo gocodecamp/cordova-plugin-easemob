@@ -279,10 +279,10 @@ public class ZJNSHXPlugin extends CordovaPlugin {
      *
      * @param sendVal
      */
-    public static void gotoDesignerDeatil(String sendVal) {
+    public static void gotoDesignerDetail(String sendVal) {
         if (null != mWebView) {
-            LogUtils.d(TAG, "gotoDesignerDeatil sendVal=" + sendVal);
-            mWebView.loadUrl("javascript:goToDesignerDetial(" + sendVal + ")");
+            LogUtils.d(TAG, "gotoDesignerDetail sendVal=" + sendVal);
+            mWebView.loadUrl("javascript:goToDesignerDetail(" + sendVal + ")");
         }
     }
 

@@ -134,7 +134,7 @@ Entry user detail page（进入用户详情页）
 
 Entry designer detail page（进入设计师详情页）
 
-`gotoDesignerDeatil(String designerId)`
+`gotoDesignerDetail(String designerId)`
 
 Refresh conversation list page（刷新会话列表页）
 
