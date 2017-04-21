@@ -231,7 +231,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
             } else {
                 switch (model.message_scene) {
                     case MessageExtModel.MESSAGE_SCENE_DESIGNER:
-                        ZJNSHXPlugin.gotoDesignerDeatil(model.user.username);
+                        ZJNSHXPlugin.gotoDesignerDetail(model.user.username);
                         getActivity().finish();
                         break;
                     case MessageExtModel.MESSAGE_SCENE_CUSTOMER_SERVICE:

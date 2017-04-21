@@ -80,7 +80,7 @@ public class ChatActivity extends EaseBaseActivity {
                     @Override
                     public void onClick(View view) {
                         if (null != extModel.touser) {
-                            ZJNSHXPlugin.gotoDesignerDeatil(extModel.touser.username);
+                            ZJNSHXPlugin.gotoDesignerDetail(extModel.touser.username);
                             finish();
                         }
                     }
