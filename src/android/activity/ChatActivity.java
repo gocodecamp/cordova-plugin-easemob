@@ -154,11 +154,11 @@ public class ChatActivity extends EaseBaseActivity {
             message.setStatus(EMMessage.Status.SUCCESS);
             String extContent = GsonUtils.toJson(model);
             message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
+            // 保存同意消息
+            EMClient.getInstance().chatManager().saveMessage(message);
             List<EMMessage> msgs = new ArrayList<EMMessage>();
             msgs.add(message);
             EMClient.getInstance().chatManager().importMessages(msgs);
-            // 保存同意消息
-            EMClient.getInstance().chatManager().saveMessage(message);
         }
     }
 
