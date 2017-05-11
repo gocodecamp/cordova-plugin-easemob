@@ -171,10 +171,10 @@ public class ChatActivity extends EaseBaseActivity {
             String extContent = GsonUtils.toJson(extModel);
             message.setAttribute(EaseConstant.MESSAGE_ATTR_EXT, extContent);
             message.setStatus(EMMessage.Status.SUCCESS);
+            EMClient.getInstance().chatManager().saveMessage(message);
             List<EMMessage> msgs = new ArrayList<EMMessage>();
             msgs.add(message);
             EMClient.getInstance().chatManager().importMessages(msgs);
-            EMClient.getInstance().chatManager().saveMessage(message);
             if (null != chatFragment) {
                 chatFragment.refreshMessage();
             }
