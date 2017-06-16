@@ -125,7 +125,7 @@ static ZJNSHXPlugin *_sharedInstance;
             
             if (error != nil) {
                 NSString *result = [self resultStringWithMessage:error.errorDescription success:NO];
-                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:result];
                 [weakSelf.commandDelegate runInBackground:^{
                     [weakSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                 }];
@@ -133,8 +133,8 @@ static ZJNSHXPlugin *_sharedInstance;
             else{
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:@NO];
-                NSString *result = [self resultStringWithMessage:@"error" success:YES];
-                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:result];
+                NSString *result = [self resultStringWithMessage:@"success" success:YES];
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
                 [weakSelf.commandDelegate runInBackground:^{
                     [weakSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                 }];
